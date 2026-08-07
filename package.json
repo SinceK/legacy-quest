@@ -1,0 +1,22 @@
+{
+  "name": "legacy-quest",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "LEGACY QUEST 〜COBOLからJavaへ〜 : COBOL技術者向けJava移行学習ゲーム",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "tailwindcss": "^4.3.0",
+    "vite": "^8.2.0"
+  }
+}

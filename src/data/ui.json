@@ -1,0 +1,27 @@
+{
+  "xpPerLevel": 40,
+  "maxSkillRank": 3,
+  "rainWords": [
+    "MOVE",
+    "PERFORM",
+    "PIC",
+    "COMP-3",
+    "JCL",
+    "ItemReader",
+    "@Bean",
+    "BigDecimal",
+    "WRITE",
+    "READ",
+    "chunk",
+    "EVALUATE",
+    "Spring",
+    "01 WS",
+    "COBOL",
+    "Java"
+  ],
+  "sage": {
+    "home": "さあ、ダンジョンの主(モンスター)を倒しながらJavaへ移すのじゃ。挑むダンジョンを選ぶがよい！",
+    "resultNext": "その調子じゃ！次のダンジョンへ進むのじゃ。",
+    "resultAll": "見事じゃ！全モジュールの移行が完了した。お主はもう立派な移行の勇者じゃ！"
+  }
+}

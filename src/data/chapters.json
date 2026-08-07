@@ -1,0 +1,223 @@
+[
+  {
+    "id": "ch1",
+    "no": "第1章",
+    "title": "ことばを覚える",
+    "dungeon": "ことばの塔",
+    "emoji": "📜",
+    "skill": "syntax",
+    "monster": {
+      "name": "コーボル・ゴブリン",
+      "body": "#34d399",
+      "accent": "#065f46",
+      "eyes": 2,
+      "horns": false,
+      "mood": "calm"
+    },
+    "intro": "ようこそ移行チームへ！ まずは古の言葉『COBOL』を読み解くのじゃ。MOVEは…代入の呪文じゃぞ。",
+    "cobol": "01 WS-NAME   PIC X(10).\n01 WS-COUNT  PIC 9(3).\n\nMOVE 'HELLO' TO WS-NAME.\nMOVE 100     TO WS-COUNT.",
+    "questions": [
+      {
+        "id": "ch1-q1",
+        "type": "fill",
+        "prompt": "MOVE 'HELLO' TO WS-NAME. をJavaにすると？",
+        "javaTemplate": "String wsName = ⬚;",
+        "options": ["\"HELLO\"", "'HELLO'", "HELLO", "new String(HELLO)"],
+        "answer": 0,
+        "explanation": "MOVEは代入。Javaは = を使い、文字列は必ずダブルクォート \" \" で囲む。",
+        "xp": 10
+      },
+      {
+        "id": "ch1-q2",
+        "type": "choice",
+        "prompt": "WS-COUNT PIC 9(3) に最も合うJavaの型は？",
+        "options": ["int", "String", "double", "boolean"],
+        "answer": 0,
+        "explanation": "PIC 9(n) は数字だけの項目なので整数型(int等)。PIC X(n) は文字なのでString。",
+        "xp": 10
+      },
+      {
+        "id": "ch1-q3",
+        "type": "matching",
+        "prompt": "PIC句とJavaの型を対応づけよ",
+        "pairs": [
+          { "left": "PIC X(10)", "right": "String" },
+          { "left": "PIC 9(3)", "right": "int" },
+          { "left": "PIC S9(7)V99 COMP-3", "right": "BigDecimal" }
+        ],
+        "explanation": "文字はString、整数はint、金額などのCOMP-3はBigDecimal(第4章で詳しく)。",
+        "xp": 15
+      }
+    ]
+  },
+  {
+    "id": "ch2",
+    "no": "第2章",
+    "title": "構造を読み解く",
+    "dungeon": "歯車の工房",
+    "emoji": "⚙️",
+    "skill": "design",
+    "monster": {
+      "name": "ハグルマ・ゴーレム",
+      "body": "#94a3b8",
+      "accent": "#334155",
+      "eyes": 1,
+      "horns": false,
+      "mood": "calm",
+      "square": true
+    },
+    "intro": "バッチの巻物を Spring Batch の三つの部品に分けるのじゃ。読み・加工・書き出し、じゃな。",
+    "cobol": "PERFORM UNTIL WS-EOF = 'Y'\n    READ IN-FILE\n      AT END     MOVE 'Y' TO WS-EOF\n      NOT AT END PERFORM CALC-TAX\n                 WRITE OUT-REC\n    END-READ\nEND-PERFORM.",
+    "questions": [
+      {
+        "id": "ch2-q1",
+        "type": "matching",
+        "prompt": "バッチの役割を Spring Batch の部品に対応づけよ",
+        "pairs": [
+          { "left": "入力を1件読む", "right": "ItemReader" },
+          { "left": "1件を加工(税計算)", "right": "ItemProcessor" },
+          { "left": "結果を書き出す", "right": "ItemWriter" },
+          { "left": "COMMITの単位", "right": "chunkサイズ" }
+        ],
+        "explanation": "Spring Batchはchunk指向。read→process→(chunk分まとめて)writeの流れ。",
+        "xp": 15
+      },
+      {
+        "id": "ch2-q2",
+        "type": "choice",
+        "prompt": "CALC-TAX(1件ごとに税を計算して書き換える処理)を置く場所は？",
+        "options": ["ItemProcessor", "ItemReader", "ItemWriter", "JobLauncher"],
+        "answer": 0,
+        "explanation": "入力を受け取り加工して次へ渡す処理はProcessorの役割。",
+        "xp": 10
+      },
+      {
+        "id": "ch2-q3",
+        "type": "ordering",
+        "prompt": "chunk指向処理の流れを正しい順に並べよ",
+        "items": [
+          "Readerで1件読む",
+          "Processorで加工する",
+          "chunk分たまったらWriterでまとめ書き",
+          "トランザクションを確定(commit)"
+        ],
+        "explanation": "read→processをchunk分くり返し、まとめてwriteしてcommitするのが基本サイクル。",
+        "xp": 15
+      }
+    ]
+  },
+  {
+    "id": "ch3",
+    "no": "第3章",
+    "title": "計画を立てる",
+    "dungeon": "設計図の間",
+    "emoji": "🗺️",
+    "skill": "process",
+    "monster": {
+      "name": "セッケイ・スフィンクス",
+      "body": "#a78bfa",
+      "accent": "#5b21b6",
+      "eyes": 2,
+      "horns": false,
+      "mood": "think"
+    },
+    "intro": "あわてて全部を一度に作り替えると事故るぞ。正しい手順で進めるのじゃ。",
+    "cobol": "* 巨大なCOBOL基幹システムをJavaへ移行する。\n* さて…何から手をつける？",
+    "questions": [
+      {
+        "id": "ch3-q1",
+        "type": "ordering",
+        "prompt": "移行の工程を正しい順に並べよ",
+        "items": [
+          "現状分析(資産の棚卸し)",
+          "移行方針の決定",
+          "変換(Javaへ実装)",
+          "テスト(旧と結果を突合)",
+          "本番切替"
+        ],
+        "explanation": "まず今あるものを知り、方針を決めてから変換・テスト・切替へ進む。",
+        "xp": 15
+      },
+      {
+        "id": "ch3-q2",
+        "type": "choice",
+        "prompt": "資産の量や依存関係を把握するのはどの工程？",
+        "options": ["現状分析(棚卸し)", "テスト", "本番切替", "変換"],
+        "answer": 0,
+        "explanation": "規模と依存を把握しないと方針も見積もりも立たない、移行の土台。",
+        "xp": 10
+      },
+      {
+        "id": "ch3-q3",
+        "type": "choice",
+        "prompt": "大規模システムでリスクを抑える進め方は？",
+        "options": [
+          "一部ずつ移行し、都度検証しながら進める",
+          "全部を一度に作り替えて一斉切替する",
+          "テストは本番切替の後にまとめて行う",
+          "ドキュメントは作らず記憶で進める"
+        ],
+        "answer": 0,
+        "explanation": "ビッグバン移行はリスクが高い。段階的移行＋検証が安全。",
+        "xp": 15
+      }
+    ]
+  },
+  {
+    "id": "ch4",
+    "no": "第4章",
+    "title": "現場の罠",
+    "dungeon": "落とし穴の洞窟",
+    "emoji": "💀",
+    "skill": "practice",
+    "monster": {
+      "name": "ゴサ・デーモン",
+      "body": "#fb7185",
+      "accent": "#9f1239",
+      "eyes": 3,
+      "horns": true,
+      "mood": "angry"
+    },
+    "intro": "ここが最難関の洞窟…金額の計算に『誤差の魔物』が潜んでおる。油断するでないぞ！",
+    "cobol": "01 WS-AMOUNT  PIC S9(7)V99 COMP-3.\n\nCOMPUTE WS-AMOUNT = WS-PRICE * WS-QTY.",
+    "questions": [
+      {
+        "id": "ch4-q1",
+        "type": "choice",
+        "prompt": "COMP-3の金額(S9(7)V99)をJavaで正確に扱う型は？",
+        "options": ["BigDecimal", "double", "float", "int"],
+        "answer": 0,
+        "explanation": "COMP-3は10進を正確に保持する。金額はBigDecimalで扱う。",
+        "xp": 10
+      },
+      {
+        "id": "ch4-q2",
+        "type": "choice",
+        "prompt": "金額計算に double を使うと何が問題？",
+        "options": [
+          "2進浮動小数点は10進小数を正確に表せず誤差が出る",
+          "計算が遅いだけで結果は正確",
+          "負の数を扱えない",
+          "桁数上限がなく無限にメモリを使う"
+        ],
+        "answer": 0,
+        "explanation": "0.1+0.2 が 0.3 にならないように、doubleは10進小数を正確に表せない。金額では致命的。",
+        "xp": 15
+      },
+      {
+        "id": "ch4-q3",
+        "type": "choice",
+        "prompt": "金額 123.45 を誤差なく生成するのは？(罠に注意！)",
+        "options": [
+          "new BigDecimal(\"123.45\")",
+          "new BigDecimal(123.45)",
+          "(BigDecimal) 123.45",
+          "new BigDecimal(123.45f)"
+        ],
+        "answer": 0,
+        "explanation": "落とし穴: double引数のコンストラクタはその時点で誤差を持ち込む。文字列で渡すのが正解(BigDecimal.valueOfも可)。",
+        "xp": 20
+      }
+    ]
+  }
+]

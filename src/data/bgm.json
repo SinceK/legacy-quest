@@ -1,0 +1,203 @@
+{
+  "title": {
+    "bpm": 74,
+    "loopBeats": 16,
+    "gain": 0.9,
+    "channels": [
+      {
+        "type": "tone",
+        "wave": "square",
+        "gain": 0.1,
+        "notes": [
+          ["A4", 0, 2],
+          ["C5", 2, 2],
+          ["E5", 4, 2.5],
+          ["D5", 6.5, 1.5],
+          ["C5", 8, 2],
+          ["B4", 10, 1],
+          ["A4", 11, 1],
+          ["G4", 12, 2],
+          ["A4", 14, 2]
+        ]
+      },
+      {
+        "type": "tone",
+        "wave": "square",
+        "gain": 0.04,
+        "notes": [
+          ["E4", 0, 4],
+          ["C4", 4, 4],
+          ["G4", 8, 4],
+          ["B3", 12, 4]
+        ]
+      },
+      {
+        "type": "tone",
+        "wave": "triangle",
+        "gain": 0.16,
+        "notes": [
+          ["A2", 0, 3.6],
+          ["F2", 4, 3.6],
+          ["C3", 8, 3.6],
+          ["E2", 12, 3.6]
+        ]
+      }
+    ]
+  },
+
+  "map": {
+    "bpm": 112,
+    "loopBeats": 16,
+    "gain": 0.85,
+    "channels": [
+      {
+        "type": "tone",
+        "wave": "square",
+        "gain": 0.11,
+        "notes": [
+          ["E5", 0, 1],
+          ["G5", 1, 1],
+          ["A5", 2, 1.5],
+          ["G5", 3.5, 0.5],
+          ["E5", 4, 1],
+          ["D5", 5, 1],
+          ["C5", 6, 2],
+          ["D5", 8, 1],
+          ["E5", 9, 1],
+          ["G5", 10, 1.5],
+          ["E5", 11.5, 0.5],
+          ["D5", 12, 1],
+          ["C5", 13, 1],
+          ["A4", 14, 2]
+        ]
+      },
+      {
+        "type": "arp",
+        "wave": "square",
+        "gain": 0.045,
+        "rate": 0.5,
+        "chords": [
+          { "start": 0, "beats": 4, "notes": ["A4", "C5", "E5"] },
+          { "start": 4, "beats": 4, "notes": ["F4", "A4", "C5"] },
+          { "start": 8, "beats": 4, "notes": ["C5", "E5", "G5"] },
+          { "start": 12, "beats": 4, "notes": ["G4", "B4", "D5"] }
+        ]
+      },
+      {
+        "type": "arp",
+        "wave": "triangle",
+        "gain": 0.17,
+        "rate": 1,
+        "chords": [
+          { "start": 0, "beats": 4, "notes": ["A2", "A2", "E3", "A2"] },
+          { "start": 4, "beats": 4, "notes": ["F2", "F2", "C3", "F2"] },
+          { "start": 8, "beats": 4, "notes": ["C3", "C3", "G2", "C3"] },
+          { "start": 12, "beats": 4, "notes": ["G2", "G2", "D3", "G2"] }
+        ]
+      },
+      {
+        "type": "kit",
+        "gain": 0.24,
+        "pattern": [
+          { "drum": "hat", "every": 0.5 },
+          { "drum": "kick", "at": [0, 2.5, 4, 6.5, 8, 10.5, 12, 14.5] },
+          { "drum": "snare", "at": [2, 6, 10, 14] }
+        ]
+      }
+    ]
+  },
+
+  "battle": {
+    "bpm": 150,
+    "loopBeats": 8,
+    "gain": 0.9,
+    "channels": [
+      {
+        "type": "tone",
+        "wave": "square",
+        "gain": 0.12,
+        "notes": [
+          ["A4", 0, 0.5],
+          ["A4", 0.5, 0.5],
+          ["C5", 1, 0.5],
+          ["E5", 1.5, 0.5],
+          ["D5", 2, 0.75],
+          ["C5", 2.75, 0.25],
+          ["B4", 3, 1],
+          ["A4", 4, 0.5],
+          ["A4", 4.5, 0.5],
+          ["C5", 5, 0.5],
+          ["E5", 5.5, 0.5],
+          ["G5", 6, 1],
+          ["F5", 7, 1]
+        ]
+      },
+      {
+        "type": "arp",
+        "wave": "triangle",
+        "gain": 0.2,
+        "rate": 0.5,
+        "chords": [
+          { "start": 0, "beats": 4, "notes": ["A2", "A2", "A3", "A2"] },
+          { "start": 4, "beats": 2, "notes": ["F2", "F2", "F3", "F2"] },
+          { "start": 6, "beats": 2, "notes": ["G2", "G2", "G3", "G2"] }
+        ]
+      },
+      {
+        "type": "kit",
+        "gain": 0.26,
+        "pattern": [
+          { "drum": "hat", "every": 0.25 },
+          { "drum": "kick", "at": [0, 1, 2, 3, 4, 5, 6, 7] },
+          { "drum": "snare", "at": [1, 3, 5, 7] }
+        ]
+      }
+    ]
+  },
+
+  "victory": {
+    "bpm": 128,
+    "loopBeats": 8,
+    "gain": 0.9,
+    "channels": [
+      {
+        "type": "tone",
+        "wave": "square",
+        "gain": 0.12,
+        "notes": [
+          ["C5", 0, 0.5],
+          ["E5", 0.5, 0.5],
+          ["G5", 1, 0.5],
+          ["C6", 1.5, 1.5],
+          ["B5", 3, 0.5],
+          ["C6", 3.5, 0.5],
+          ["E6", 4, 1],
+          ["D6", 5, 0.5],
+          ["C6", 5.5, 0.5],
+          ["G5", 6, 2]
+        ]
+      },
+      {
+        "type": "arp",
+        "wave": "triangle",
+        "gain": 0.18,
+        "rate": 0.5,
+        "chords": [
+          { "start": 0, "beats": 2, "notes": ["C3", "G3", "C4", "G3"] },
+          { "start": 2, "beats": 2, "notes": ["G2", "D3", "G3", "D3"] },
+          { "start": 4, "beats": 2, "notes": ["F2", "C3", "F3", "C3"] },
+          { "start": 6, "beats": 2, "notes": ["C3", "G3", "C4", "E4"] }
+        ]
+      },
+      {
+        "type": "kit",
+        "gain": 0.24,
+        "pattern": [
+          { "drum": "hat", "every": 0.5 },
+          { "drum": "kick", "at": [0, 2, 4, 6] },
+          { "drum": "snare", "at": [1, 3, 5, 7] }
+        ]
+      }
+    ]
+  }
+}
