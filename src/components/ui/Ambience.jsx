@@ -1,34 +1,40 @@
 import { useMemo } from "react";
 
-export function Starfield() {
+/**
+ * 星空。px指定の点で描く。
+ * SVG + preserveAspectRatio="none" だと円が画面比率で引き伸ばされ、
+ * 星ではなく大きな斑点になってしまうため使わない。
+ */
+export function Starfield({ count = 46 }) {
   const stars = useMemo(
     () =>
-      Array.from({ length: 46 }).map(() => ({
+      Array.from({ length: count }).map(() => ({
         x: Math.random() * 100,
-        y: Math.random() * 78,
-        r: Math.random() * 1.6 + 0.4,
-        d: Math.random() * 3,
+        y: Math.random() * 72,
+        size: 0.8 + Math.random() * 1.8,
+        delay: Math.random() * 3,
         dur: 2 + Math.random() * 3,
       })),
-    [],
+    [count],
   );
   return (
-    <svg
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      preserveAspectRatio="none"
-      viewBox="0 0 100 100"
-    >
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {stars.map((s, i) => (
-        <circle
+        <span
           key={i}
-          cx={s.x}
-          cy={s.y}
-          r={s.r}
-          fill="#e2e8f0"
-          style={{ animation: `twinkle ${s.dur}s ease-in-out ${s.d}s infinite` }}
+          className="absolute rounded-full"
+          style={{
+            left: `${s.x}%`,
+            top: `${s.y}%`,
+            width: s.size,
+            height: s.size,
+            background: "#e2e8f0",
+            boxShadow: `0 0 ${s.size * 2.4}px rgba(226,232,240,0.75)`,
+            animation: `twinkle ${s.dur}s ease-in-out ${s.delay}s infinite`,
+          }}
         />
       ))}
-    </svg>
+    </div>
   );
 }
 

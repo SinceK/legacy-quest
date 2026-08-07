@@ -54,13 +54,37 @@ src/
 ├── hooks/useGameProgress.js localStorageへの進捗保存と復元
 ├── lib/                     game.js（XP計算等）/ storage.js / theme.js
 ├── components/
-│   ├── ui/                    ロゴ・コードレイン・演出パーツ・音声トグル
+│   ├── ui/                    ロゴ・コードレイン・雲海・火の粉・音声トグル
 │   ├── characters/            賢者・モンスター（SVG）
 │   ├── scenes/                オープニングの背景SVGとシーン登録表
 │   ├── questions/             選択式・組み合わせ・並べ替えの出題UI
-│   └── screens/               Intro / Home / Stage / 結果 / Victory
+│   └── screens/               Intro / TitleFlight / Home / Stage / 結果 / Victory
 └── styles/index.css         Tailwind読み込みとゲーム内キーフレーム
 ```
+
+## オープニング
+
+映画のオープニングを意識した3幕構成です。初回のみ再生され、2回目以降はマップから始まります。
+
+| 幕 | 実装 | 内容 |
+| --- | --- | --- |
+| 開始ゲート | `screens/IntroGate.jsx` | 雲海の中でタップを待つ。ここで音を鳴らす許可を得る |
+| 物語 | `screens/Intro.jsx` | `story.json` の5シーンを字幕付きで送る |
+| タイトル飛来 | `screens/TitleFlight.jsx` | 雲の奥からロゴが飛来し、稲妻とともに着地する |
+
+演出の中身：
+
+- **雲海**（`ui/NightSky.jsx`）… `feTurbulence` のフラクタルノイズを3層、別々の速度で流して視差を作る。画像を持たないので読み込み待ちがなく、どの解像度でも滲まない
+- **火の粉**（`ui/Embers.jsx`）… 金色の粒がゆらぎながら舞い上がる
+- **ロゴ飛来** … 遠方から `translateZ(-2600px)` で迫り、着地でグローが焼き切れて金属質が残る
+- **音楽** … ホ短調・3拍子のチェレスタのワルツ（`bgm.json` の `title`）
+
+タイミングの調整箇所：
+
+- 1シーンの表示時間 → `src/data/story.json` の `sceneDurationMs`
+- ロゴの飛来・着地・ボタン出現 → `TitleFlight.jsx` 冒頭の `FLIGHT_MS` / `IMPACT_MS` / `CTA_MS`
+
+`prefers-reduced-motion` が有効な環境では、これらのアニメーションは自動的に停止します。
 
 ## コンテンツの追加・編集
 
@@ -128,6 +152,8 @@ BGMは画面ごとに切り替わります（タイトル / マップ / バト�
 
 ## 補足
 
-- ブラウザの自動再生制限のため、**最初のクリック/キー操作までは音が鳴りません**（仕様）。
+- ブラウザの自動再生制限のため、最初のユーザー操作までは音を鳴らせません。
+  オープニングが無音で流れてしまわないよう、冒頭に開始ゲートを置いています。
 - `prefers-reduced-motion` が有効な環境ではアニメーションを停止します。
+- BGMは自作です（既存楽曲の複製は含みません）。
 - 元になった単一ファイルの試作版は [`docs/prototype/legacy-quest.jsx`](docs/prototype/legacy-quest.jsx) に残しています（現在はビルド対象外）。
