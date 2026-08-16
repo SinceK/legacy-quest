@@ -11,7 +11,7 @@ import IntroGate from "./IntroGate.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
 
 // シーンごとにケンバーンズの寄り引き・パン方向を変えて、カメラが意思を持って動いているように見せる
-const KENBURNS = ["kenburnsA", "kenburnsB", "kenburnsC"];
+const KENBURNS = ["kenburnsA", "kenburnsD", "kenburnsE", "kenburnsB", "kenburnsC"];
 
 export default function Intro({ onDone }) {
   const { playSfx } = useAudio();
@@ -48,18 +48,24 @@ export default function Intro({ onDone }) {
       {!started ? (
         <IntroGate onStart={() => setStarted(true)} />
       ) : !titleShown ? (
-        <div key={i} className="absolute inset-0" style={{ animation: "cineIn 1.3s ease-out" }}>
+        <div
+          key={i}
+          className={`opening-shot opening-shot--${sc.scene} absolute inset-0`}
+          style={{ animation: "cineIn .95s cubic-bezier(.16,.84,.26,1)" }}
+        >
           {/* シーン切り替えの一瞬だけ暗転させ、カットが切り替わる映画的な間を作る */}
           <div
             key={`shutter${i}`}
             className="absolute inset-0 bg-black pointer-events-none"
-            style={{ zIndex: 5, animation: "shutterFlash .5s ease-out both" }}
+            style={{ zIndex: 12, animation: "shutterFlash .62s ease-out both" }}
           />
           <div className="absolute inset-0" style={{ background: sc.tint }} />
           {/* イラスト本体を画面いっぱいに敷き、ケンバーンズでゆっくり動かす */}
           <div
-            className="absolute inset-0"
-            style={{ animation: `${KENBURNS[i % KENBURNS.length]} 5.4s ease-out forwards` }}
+            className="opening-camera absolute inset-0"
+            style={{
+              animation: `${KENBURNS[i % KENBURNS.length]} ${sc.scene === "journey" ? STORY.sceneDurationMs : STORY.sceneDurationMs + 900}ms cubic-bezier(.2,.65,.3,1) forwards`,
+            }}
           >
             {sceneImage ? (
               <img
@@ -72,6 +78,15 @@ export default function Intro({ onDone }) {
               <Scene />
             ) : null}
           </div>
+          <div className="opening-motion-trails absolute inset-0 pointer-events-none" aria-hidden="true">
+            {Array.from({ length: 8 }, (_, k) => <span key={k} style={{ "--trail": k }} />)}
+          </div>
+          <div className="opening-scene-fx absolute inset-0 pointer-events-none" aria-hidden="true">
+            {Array.from({ length: 10 }, (_, k) => <span key={k} style={{ "--fx": k }} />)}
+          </div>
+          <div className="opening-speed-lines absolute inset-0 pointer-events-none" />
+          <div className="opening-flare absolute inset-0 pointer-events-none" />
+          <div className="opening-foreground absolute inset-0 pointer-events-none" />
           {/* 各シーンの背後にも雲を流して、タイトルまで空気を繋げる */}
           {!sceneImage && <NightSky showBase={false} moon={false} intensity={0.6} />}
           <LightRays count={sceneImage ? 2 : 4} tint={sc.moteColor} intensity={sceneImage ? 0.32 : 0.8} />
@@ -83,7 +98,7 @@ export default function Intro({ onDone }) {
                 "linear-gradient(180deg,rgba(0,0,0,.12) 0%,transparent 42%,rgba(0,0,0,.72) 100%), radial-gradient(circle at 50% 42%, transparent 30%, rgba(0,0,0,0.58))",
             }}
           />
-          <div className="absolute inset-x-0 px-8 text-center" style={{ top: "68%" }}>
+          <div className="absolute inset-x-0 px-8 text-center" style={{ top: "68%", zIndex: 15 }}>
             <p
               key={`cap${i}`}
               className="text-slate-100 text-lg leading-relaxed font-serif"
@@ -92,7 +107,7 @@ export default function Intro({ onDone }) {
               {sc.caption}
             </p>
           </div>
-          <div className="absolute inset-x-0 flex justify-center gap-2" style={{ bottom: "9%" }}>
+          <div className="absolute inset-x-0 flex justify-center gap-2" style={{ bottom: "9%", zIndex: 15 }}>
             {scenes.map((_, k) => (
               <span
                 key={k}

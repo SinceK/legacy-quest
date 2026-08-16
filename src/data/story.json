@@ -8,6 +8,18 @@
       "caption": "世界を支え続けた、古の言語——COBOL。"
     },
     {
+      "scene": "world",
+      "tint": "radial-gradient(circle at 50% 48%, #075c54, #06162d 74%)",
+      "moteColor": "#5eead4",
+      "caption": "その力は国境を越え、あらゆる営みをつないでいった。"
+    },
+    {
+      "scene": "cracks",
+      "tint": "radial-gradient(circle at 52% 48%, #7f1d1d, #100611 74%)",
+      "moteColor": "#fb7185",
+      "caption": "だが時の重みは、堅牢な礎に亀裂を刻み始める。"
+    },
+    {
       "scene": "crisis",
       "tint": "radial-gradient(circle at 50% 50%, #3b0d16, #0a0409 72%)",
       "moteColor": "#f87171",

@@ -37,8 +37,7 @@ export default function TitleFlight({ onStart }) {
           <img
             src={OPENING_IMAGES.journey}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{ animation: "skyPush 26s ease-out both", filter: "brightness(.36) saturate(.8)" }}
+            className="title-journey-bg absolute inset-0 h-full w-full object-cover"
           />
           <div
             className="absolute inset-0"

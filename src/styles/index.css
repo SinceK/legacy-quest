@@ -1048,6 +1048,193 @@ body {
     transform: scale(1.2) translate(3%, -3%) rotate(0.6deg);
   }
 }
+@keyframes kenburnsD {
+  0% { transform: scale(1.24) translate(-4%, 3%) rotate(-0.8deg); }
+  100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
+}
+@keyframes kenburnsE {
+  0% { transform: scale(1.02) translate(1%, 2%) rotate(0deg); }
+  38% { transform: scale(1.08) translate(-1%, 0) rotate(-0.25deg); }
+  100% { transform: scale(1.28) translate(-3%, -5%) rotate(-0.7deg); }
+}
+
+.opening-shot { isolation: isolate; }
+.opening-camera { will-change: transform; }
+.opening-motion-trails { z-index: 5; overflow: hidden; }
+.opening-motion-trails span {
+  position: absolute;
+  left: calc(7% + var(--trail) * 12%);
+  top: calc(18% + (var(--trail) % 4) * 16%);
+  width: calc(50px + (var(--trail) % 3) * 38px);
+  height: 2px;
+  border-radius: 999px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(153,246,228,.8), transparent);
+  transform: rotate(-12deg);
+  display: none;
+}
+.opening-shot--world .opening-motion-trails span {
+  display: block;
+  animation: trailFly 1.8s ease-out calc(var(--trail) * .11s) both;
+}
+.opening-scene-fx { z-index: 5; overflow: hidden; }
+.opening-scene-fx span { position: absolute; opacity: 0; }
+
+/* 王国：大きな雲影がゆっくり横切り、静かなスケール感を出す */
+.opening-shot--kingdom .opening-scene-fx {
+  background: linear-gradient(112deg, transparent 18%, rgba(3,7,18,.45) 42%, transparent 66%);
+  mix-blend-mode: multiply;
+  animation: cloudShadow 4.2s ease-in-out both;
+}
+
+/* 亀裂：カメラの一撃と、中心から走る赤い稲妻 */
+.opening-shot--cracks .opening-camera { animation: crackCamera 4.7s cubic-bezier(.12,.72,.16,1) both !important; }
+.opening-shot--cracks .opening-scene-fx {
+  background: conic-gradient(from 12deg at 53% 47%, transparent 0 8%, rgba(255,70,70,.72) 8.2% 8.5%, transparent 8.8% 34%, rgba(255,180,90,.55) 34.2% 34.45%, transparent 34.8%);
+  mix-blend-mode: screen;
+  animation: lightningCrack 2.6s steps(1) both;
+}
+
+/* 危機：赤い警告灯が呼吸するように明滅する */
+.opening-shot--crisis .opening-scene-fx {
+  background:
+    repeating-radial-gradient(circle at 50% 48%, transparent 0 12%, rgba(255,70,70,.32) 12.4% 12.8%, transparent 13.2% 22%),
+    radial-gradient(circle at 50% 48%, rgba(255,40,55,.5), transparent 58%);
+  mix-blend-mode: screen;
+  animation: crisisShockwave 1.35s cubic-bezier(.12,.75,.2,1) both, dangerPulse .9s ease-in-out 1.35s 3 both;
+}
+.opening-shot--crisis .opening-camera { animation: crisisRumble 4.7s ease-out both !important; }
+.opening-shot--crisis .opening-scene-fx span {
+  left: calc(5% + var(--fx) * 9.5%);
+  top: calc(-6% - (var(--fx) % 3) * 8%);
+  width: calc(5px + (var(--fx) % 3) * 3px);
+  height: calc(12px + (var(--fx) % 4) * 7px);
+  background: #fb7185;
+  box-shadow: 0 0 9px #ef4444;
+  animation: crisisDebris 2.4s cubic-bezier(.2,.65,.3,1) calc(var(--fx) * .09s) both;
+}
+
+/* 旅立ち：金色の光片が上へ抜け、画面の空気を反転させる */
+.opening-shot--journey .opening-scene-fx span {
+  left: calc(8% + var(--fx) * 9%);
+  bottom: -8%;
+  width: 3px;
+  height: calc(35px + (var(--fx) % 4) * 16px);
+  border-radius: 999px;
+  background: linear-gradient(to top, transparent, rgba(253,230,138,.9));
+  box-shadow: 0 0 12px rgba(251,191,36,.8);
+  animation: hopeStreak 2.8s ease-out calc(var(--fx) * .12s) both;
+}
+.opening-shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  pointer-events: none;
+  box-shadow: inset 0 0 15vw rgba(0, 0, 0, .76);
+  animation: openingBreath 3.8s ease-in-out both;
+}
+.opening-flare {
+  z-index: 7;
+  opacity: 0;
+  background: linear-gradient(112deg, transparent 25%, rgba(255,255,255,.8) 49.5%, transparent 52%);
+  mix-blend-mode: screen;
+  animation: openingLightCut .9s ease-out both;
+}
+.opening-speed-lines {
+  z-index: 6;
+  opacity: 0;
+  background: repeating-conic-gradient(from 8deg at 50% 48%, transparent 0 8deg, rgba(255,255,255,.14) 8.3deg 8.55deg);
+  mask-image: radial-gradient(circle, transparent 0 20%, #000 72%, transparent 100%);
+}
+.opening-shot--cracks .opening-speed-lines,
+.opening-shot--crisis .opening-speed-lines { animation: openingRush .8s cubic-bezier(.1,.8,.2,1) both; }
+.opening-shot--cracks .opening-flare { background: linear-gradient(112deg, transparent 22%, rgba(255,70,70,.88) 49%, transparent 53%); }
+.opening-foreground {
+  z-index: 8;
+  background: linear-gradient(105deg, transparent 48%, rgba(255,255,255,.12) 50%, transparent 52%);
+  mix-blend-mode: overlay;
+  animation: foregroundSweep 3.8s ease-in-out both;
+}
+@keyframes openingBreath {
+  0% { opacity: 1; box-shadow: inset 0 0 24vw rgba(0,0,0,.9); }
+  35% { opacity: .58; }
+  100% { opacity: .9; box-shadow: inset 0 0 11vw rgba(0,0,0,.68); }
+}
+@keyframes openingLightCut {
+  0% { opacity: 0; transform: translateX(-70%) skewX(-10deg); }
+  18% { opacity: .72; }
+  100% { opacity: 0; transform: translateX(70%) skewX(-10deg); }
+}
+@keyframes openingRush {
+  0% { opacity: .85; transform: scale(.72) rotate(-2deg); filter: blur(2px); }
+  100% { opacity: 0; transform: scale(1.45) rotate(1deg); filter: blur(0); }
+}
+@keyframes foregroundSweep {
+  0% { opacity: 0; transform: translateX(-35%) scale(1.1); }
+  18% { opacity: .6; }
+  55%, 100% { opacity: 0; transform: translateX(35%) scale(1.2); }
+}
+@keyframes trailFly {
+  0% { opacity: 0; transform: translate3d(-55vw, 25px, 0) rotate(-12deg) scaleX(.3); }
+  22% { opacity: .8; }
+  100% { opacity: 0; transform: translate3d(65vw, -35px, 0) rotate(-12deg) scaleX(1.8); }
+}
+@keyframes cloudShadow {
+  0% { opacity: 0; transform: translateX(-42%) scaleX(1.3); }
+  25% { opacity: .8; }
+  100% { opacity: 0; transform: translateX(55%) scaleX(1.1); }
+}
+@keyframes crackCamera {
+  0% { transform: scale(1.03) translate(0, 0); filter: brightness(1); }
+  7% { transform: scale(1.12) translate(-1.2%, .8%) rotate(-.5deg); filter: brightness(1.8); }
+  12% { transform: scale(1.09) translate(.8%, -.5%) rotate(.35deg); }
+  19% { transform: scale(1.1) translate(-.35%, .2%); filter: brightness(1); }
+  100% { transform: scale(1.2) translate(-2%, -3%); }
+}
+@keyframes lightningCrack {
+  0%, 8%, 14%, 100% { opacity: 0; }
+  5%, 11% { opacity: 1; }
+}
+@keyframes dangerPulse {
+  0%, 100% { opacity: .08; }
+  42% { opacity: .72; }
+}
+@keyframes crisisShockwave {
+  0% { opacity: .9; transform: scale(.2); filter: brightness(2.2); }
+  45% { opacity: .7; }
+  100% { opacity: 0; transform: scale(1.65); filter: brightness(1); }
+}
+@keyframes crisisDebris {
+  0% { opacity: 0; transform: translate3d(0,-8vh,0) rotate(0deg); }
+  18% { opacity: .9; }
+  100% { opacity: 0; transform: translate3d(calc((var(--fx) - 5) * 7px),92vh,0) rotate(420deg); }
+}
+@keyframes crisisRumble {
+  0% { transform: scale(1.06) translate(0, 0); }
+  5% { transform: scale(1.12) translate(-10px, 5px) rotate(-.4deg); filter: brightness(1.8); }
+  9% { transform: scale(1.1) translate(9px, -5px) rotate(.35deg); }
+  14% { transform: scale(1.1) translate(-7px, 3px); filter: brightness(1); }
+  20% { transform: scale(1.11) translate(5px, -2px); }
+  27% { transform: scale(1.12) translate(-3px, 1px); }
+  36%, 100% { transform: scale(1.22) translate(-3%, -3%); }
+}
+@keyframes hopeStreak {
+  0% { opacity: 0; transform: translateY(20vh) scaleY(.35); }
+  25% { opacity: .8; }
+  100% { opacity: 0; transform: translateY(-105vh) scaleY(1.5); }
+}
+
+/* 5枚目の終了姿勢から同じ画像のままタイトル背景へ引き継ぐ */
+.title-journey-bg {
+  filter: brightness(.36) saturate(.8);
+  animation: titleJourneyContinue 26s ease-out both;
+  will-change: transform;
+}
+@keyframes titleJourneyContinue {
+  from { transform: scale(1.2) translate(3%, -3%) rotate(.6deg); }
+  to { transform: scale(1.34) translate(1%, -4%) rotate(0deg); }
+}
 
 /* 結像する中心から放射状に伸びるレンズフレア（中心の光球） */
 @keyframes flareBurst {
