@@ -1,8 +1,7 @@
 import Emblem from "../ui/Emblem.jsx";
-import NightSky from "../ui/NightSky.jsx";
 import Embers from "../ui/Embers.jsx";
-import LightRays from "../ui/LightRays.jsx";
 import FilmGrain from "../ui/FilmGrain.jsx";
+import { OPENING_IMAGES } from "../../content/openingImages.js";
 
 /**
  * ブラウザの自動再生制限により、最初のユーザー操作までは音を鳴らせない。
@@ -15,13 +14,23 @@ export default function IntroGate({ onStart }) {
       className="absolute inset-0 w-full overflow-hidden cursor-pointer"
       style={{ background: "#02040a" }}
     >
-      <NightSky intensity={0.5} moon={false} />
-      <LightRays count={3} intensity={0.6} />
-      <Embers count={14} intensity={0.6} />
+      {OPENING_IMAGES.kingdom && (
+        <img
+          src={OPENING_IMAGES.kingdom}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ transform: "scale(1.035)", filter: "brightness(.42) saturate(.8)" }}
+        />
+      )}
+      <div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(circle at 50% 42%, transparent 8%, rgba(2,4,10,.45) 55%, #02040a 100%)" }}
+      />
+      <Embers count={7} intensity={0.45} />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
         <div style={{ animation: "fadeUp 1.2s ease-out both" }}>
-          <Emblem size={72} />
+          <Emblem size={66} />
         </div>
         <div
           className="font-bold text-emerald-300/80 mt-5"
@@ -29,7 +38,7 @@ export default function IntroGate({ onStart }) {
         >
           LEGACY QUEST
         </div>
-        <p className="text-slate-400 text-sm mt-8 leading-relaxed" style={{ animation: "fadeUp 1.2s ease-out .6s both" }}>
+        <p className="text-slate-300 text-sm mt-8 leading-relaxed" style={{ animation: "fadeUp 1.2s ease-out .6s both" }}>
           この物語には音楽があります。
           <br />
           音量を確認してからおすすみください。

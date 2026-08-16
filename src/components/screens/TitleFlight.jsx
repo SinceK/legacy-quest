@@ -6,6 +6,7 @@ import LightRays from "../ui/LightRays.jsx";
 import FilmGrain from "../ui/FilmGrain.jsx";
 import MagicDust from "../ui/MagicDust.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
+import { OPENING_IMAGES } from "../../content/openingImages.js";
 
 const FLIGHT_MS = 4600; // ロゴが現れきるまで
 const REVEAL_MS = 2750; // 光の粒が寄り集まり、ロゴがほのかに輝きだす瞬間
@@ -31,9 +32,24 @@ export default function TitleFlight({ onStart }) {
 
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ background: "#02040a" }}>
-      <NightSky push />
-      <LightRays count={5} intensity={0.85} />
-      <Embers count={30} />
+      {OPENING_IMAGES.journey ? (
+        <>
+          <img
+            src={OPENING_IMAGES.journey}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ animation: "skyPush 26s ease-out both", filter: "brightness(.36) saturate(.8)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(circle at 50% 45%, rgba(2,4,10,.08), #02040a 82%)" }}
+          />
+        </>
+      ) : (
+        <NightSky push />
+      )}
+      <LightRays count={3} intensity={0.48} />
+      <Embers count={12} intensity={0.65} />
       <MagicDust durationMs={REVEAL_MS + 400} startMs={200} />
 
       {/* 光の粒が収束する瞬間、画面全体がふわりと金色に満ちる */}
@@ -138,7 +154,7 @@ export default function TitleFlight({ onStart }) {
           ▶ 冒険をはじめる
         </button>
       </div>
-      <FilmGrain opacity={0.05} />
+      <FilmGrain opacity={0.025} />
     </div>
   );
 }

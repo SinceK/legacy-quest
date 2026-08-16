@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { STORY } from "../../content/index.js";
 import { OPENING_IMAGES } from "../../content/openingImages.js";
 import { SCENES } from "../scenes/index.js";
-import { Starfield } from "../ui/Ambience.jsx";
 import NightSky from "../ui/NightSky.jsx";
 import Embers from "../ui/Embers.jsx";
 import LightRays from "../ui/LightRays.jsx";
@@ -26,6 +25,14 @@ export default function Intro({ onDone }) {
     const t = setTimeout(() => setI((v) => v + 1), STORY.sceneDurationMs);
     return () => clearTimeout(t);
   }, [i, started, titleShown]);
+
+  useEffect(() => {
+    if (!started) return;
+    Object.values(OPENING_IMAGES).forEach((src) => {
+      const image = new Image();
+      image.src = src;
+    });
+  }, [started]);
 
   const sc = scenes[Math.min(i, scenes.length - 1)];
   const Scene = SCENES[sc.scene];
@@ -55,19 +62,26 @@ export default function Intro({ onDone }) {
             style={{ animation: `${KENBURNS[i % KENBURNS.length]} 5.4s ease-out forwards` }}
           >
             {sceneImage ? (
-              <img src={sceneImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              <img
+                src={sceneImage}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                decoding="async"
+              />
             ) : Scene ? (
               <Scene />
             ) : null}
           </div>
           {/* 各シーンの背後にも雲を流して、タイトルまで空気を繋げる */}
-          <NightSky showBase={false} moon={false} intensity={0.6} />
-          <Starfield />
-          <LightRays count={4} tint={sc.moteColor} intensity={0.8} />
-          <Embers count={16} color={sc.moteColor} intensity={0.85} />
+          {!sceneImage && <NightSky showBase={false} moon={false} intensity={0.6} />}
+          <LightRays count={sceneImage ? 2 : 4} tint={sc.moteColor} intensity={sceneImage ? 0.32 : 0.8} />
+          <Embers count={sceneImage ? 6 : 16} color={sc.moteColor} intensity={sceneImage ? 0.42 : 0.85} />
           <div
             className="absolute inset-0"
-            style={{ background: "radial-gradient(circle at 50% 45%, transparent 32%, rgba(0,0,0,0.82))" }}
+            style={{
+              background:
+                "linear-gradient(180deg,rgba(0,0,0,.12) 0%,transparent 42%,rgba(0,0,0,.72) 100%), radial-gradient(circle at 50% 42%, transparent 30%, rgba(0,0,0,0.58))",
+            }}
           />
           <div className="absolute inset-x-0 px-8 text-center" style={{ top: "68%" }}>
             <p
@@ -86,7 +100,7 @@ export default function Intro({ onDone }) {
               />
             ))}
           </div>
-          <FilmGrain opacity={0.045} />
+          <FilmGrain opacity={sceneImage ? 0.022 : 0.045} />
         </div>
       ) : (
         <TitleFlight onStart={finish} />
