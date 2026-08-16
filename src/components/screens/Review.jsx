@@ -41,7 +41,12 @@ export default function Review({ items, topic, onAnswer, onHome }) {
 
   return (
     <div>
-      <button onClick={onHome} className="mb-2 text-sm text-slate-400 hover:text-slate-200">← マップへ</button>
+      <button
+        onClick={onHome}
+        className="mb-3 inline-flex items-center rounded-lg border border-slate-500/35 bg-slate-900/70 px-3 py-2 text-sm font-bold text-slate-200 hover:border-amber-400/60 hover:text-amber-200"
+      >
+        ← トップ画面に戻る
+      </button>
       <div className="rpg-panel mb-4 flex items-center gap-3 rounded-2xl p-3">
         <Sage size={42} mood="think" />
         <div>

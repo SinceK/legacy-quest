@@ -57,8 +57,11 @@ export default function Stage({ chapter, onScore, onAnswer, onComplete, onHome }
   if (phase === "encounter") {
     return (
       <div>
-        <button onClick={goHome} className="text-slate-400 text-sm mb-2 hover:text-slate-200">
-          ← マップへ
+        <button
+          onClick={goHome}
+          className="mb-3 inline-flex items-center rounded-lg border border-slate-500/35 bg-slate-900/70 px-3 py-2 text-sm font-bold text-slate-200 hover:border-amber-400/60 hover:text-amber-200"
+        >
+          ← トップ画面に戻る
         </button>
         <Encounter chapter={chapter} onFight={() => setPhase("battle")} />
       </div>
@@ -90,8 +93,11 @@ export default function Stage({ chapter, onScore, onAnswer, onComplete, onHome }
         />
       )}
 
-      <button onClick={goHome} className="text-slate-400 text-sm mb-2 hover:text-slate-200">
-        ← マップへ
+      <button
+        onClick={goHome}
+        className="mb-3 inline-flex items-center rounded-lg border border-slate-500/35 bg-slate-900/70 px-3 py-2 text-sm font-bold text-slate-200 hover:border-amber-400/60 hover:text-amber-200"
+      >
+        ← トップ画面に戻る
       </button>
 
       <div
