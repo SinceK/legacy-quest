@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CHAPTERS } from "./content/index.js";
-import { levelOf } from "./lib/game.js";
+import { buildTopicStats, levelOf } from "./lib/game.js";
 import { useGameProgress } from "./hooks/useGameProgress.js";
 import { useAudio, useBgm } from "./audio/AudioProvider.jsx";
 
@@ -14,6 +14,7 @@ import Stage from "./components/screens/Stage.jsx";
 import ChapterResult from "./components/screens/ChapterResult.jsx";
 import Victory from "./components/screens/Victory.jsx";
 import Review from "./components/screens/Review.jsx";
+import LearningReport from "./components/screens/LearningReport.jsx";
 
 const BGM_BY_SCREEN = {
   intro: "title",
@@ -22,6 +23,7 @@ const BGM_BY_SCREEN = {
   stage: "battle",
   victory: "victory",
   review: "map",
+  report: "map",
 };
 
 export default function App() {
@@ -33,6 +35,7 @@ export default function App() {
   const [current, setCurrent] = useState(0);
   const [lastGain, setLastGain] = useState(0);
   const [levelUp, setLevelUp] = useState(null);
+  const [reviewTopic, setReviewTopic] = useState(null);
 
   useBgm(BGM_BY_SCREEN[screen] ?? "map");
 
@@ -57,11 +60,22 @@ export default function App() {
     addScore(questionId, skill, amount);
   }
 
-  const reviewItems = CHAPTERS.flatMap((chapter) =>
-    chapter.questions
-      .filter((question) => progress.mistakes.includes(question.id))
-      .map((question) => ({ ...question, chapter })),
+  const topicStats = useMemo(
+    () => buildTopicStats(CHAPTERS, progress.answerStats),
+    [progress.answerStats],
   );
+  const allQuestionItems = CHAPTERS.flatMap((chapter) =>
+    chapter.questions
+      .map((question) => ({
+        ...question,
+        chapter,
+        awardXp: !progress.scored.includes(question.id),
+      })),
+  );
+  const mistakeItems = allQuestionItems.filter((question) => progress.mistakes.includes(question.id));
+  const reviewItems = reviewTopic
+    ? allQuestionItems.filter((question) => question.topic === reviewTopic)
+    : mistakeItems;
 
   function startStage(index) {
     setCurrent(index);
@@ -128,9 +142,13 @@ export default function App() {
               <Home
                 chapters={CHAPTERS}
                 completed={progress.completed}
-                mistakeCount={reviewItems.length}
+                mistakeCount={mistakeItems.length}
                 onStart={startStage}
-                onReview={() => setScreen("review")}
+                onReview={() => {
+                  setReviewTopic(null);
+                  setScreen("review");
+                }}
+                onReport={() => setScreen("report")}
                 onReset={handleReset}
                 hasSave={hasSave}
               />
@@ -156,9 +174,23 @@ export default function App() {
             {screen === "review" && (
               <Review
                 items={reviewItems}
+                topic={reviewTopic}
                 onAnswer={(question, correct) => {
                   recordAnswer(question.id, correct);
                   if (correct) handleScore(question.id, question.chapter.skill, question.xp);
+                }}
+                onHome={() => {
+                  setReviewTopic(null);
+                  setScreen("home");
+                }}
+              />
+            )}
+            {screen === "report" && (
+              <LearningReport
+                stats={topicStats}
+                onReviewTopic={(topic) => {
+                  setReviewTopic(topic);
+                  setScreen("review");
                 }}
                 onHome={() => setScreen("home")}
               />

@@ -76,7 +76,7 @@ export default function MatchingQuestion({ q, onResult, onNext }) {
           explanation={q.explanation}
           wrongReason={correct ? null : q.wrongReason}
           migrationTip={q.migrationTip}
-          xp={q.xp}
+          xp={q.awardXp === false ? 0 : q.xp}
           onNext={onNext}
         />
       )}

@@ -13,6 +13,7 @@ const emptyProgress = () => ({
   completed: [],
   scored: [],
   mistakes: [],
+  answerStats: {},
   introSeen: false,
 });
 
@@ -20,13 +21,33 @@ function load() {
   const saved = readJson(STORAGE_KEY, null);
   if (!saved || saved.version !== SCHEMA_VERSION) return emptyProgress();
   const base = emptyProgress();
+  const scored = Array.isArray(saved.scored) ? saved.scored : [];
+  const mistakes = Array.isArray(saved.mistakes) ? saved.mistakes : [];
+  const answerStats =
+    saved.answerStats && typeof saved.answerStats === "object" && !Array.isArray(saved.answerStats)
+      ? saved.answerStats
+      : Object.fromEntries(
+          [...new Set([...scored, ...mistakes])].map((questionId) => {
+            const wasCorrect = scored.includes(questionId);
+            const isMistake = mistakes.includes(questionId);
+            return [
+              questionId,
+              {
+                attempts: wasCorrect && isMistake ? 2 : 1,
+                correctCount: wasCorrect ? 1 : 0,
+                lastCorrect: !isMistake,
+              },
+            ];
+          }),
+        );
   return {
     ...base,
     ...saved,
     skills: { ...base.skills, ...(saved.skills ?? {}) },
     completed: Array.isArray(saved.completed) ? saved.completed : [],
-    scored: Array.isArray(saved.scored) ? saved.scored : [],
-    mistakes: Array.isArray(saved.mistakes) ? saved.mistakes : [],
+    scored,
+    mistakes,
+    answerStats,
   };
 }
 
@@ -59,10 +80,26 @@ export function useGameProgress() {
   const recordAnswer = useCallback((questionId, correct) => {
     setProgress((p) => {
       const hasMistake = p.mistakes.includes(questionId);
-      if (correct) {
-        return hasMistake ? { ...p, mistakes: p.mistakes.filter((id) => id !== questionId) } : p;
-      }
-      return hasMistake ? p : { ...p, mistakes: [...p.mistakes, questionId] };
+      const previous = p.answerStats[questionId] ?? { attempts: 0, correctCount: 0, lastCorrect: false };
+      const mistakes = correct
+        ? hasMistake
+          ? p.mistakes.filter((id) => id !== questionId)
+          : p.mistakes
+        : hasMistake
+          ? p.mistakes
+          : [...p.mistakes, questionId];
+      return {
+        ...p,
+        mistakes,
+        answerStats: {
+          ...p.answerStats,
+          [questionId]: {
+            attempts: previous.attempts + 1,
+            correctCount: previous.correctCount + (correct ? 1 : 0),
+            lastCorrect: correct,
+          },
+        },
+      };
     });
   }, []);
 

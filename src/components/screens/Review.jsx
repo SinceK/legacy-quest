@@ -6,7 +6,7 @@ import QuestionView from "../questions/QuestionView.jsx";
 import Sage from "../characters/Sage.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
 
-export default function Review({ items, onAnswer, onHome }) {
+export default function Review({ items, topic, onAnswer, onHome }) {
   const { playSfx } = useAudio();
   const [questions] = useState(() => createQuestionSession(items, items.length));
   const [index, setIndex] = useState(0);
@@ -26,7 +26,11 @@ export default function Review({ items, onAnswer, onHome }) {
         <div className="flex justify-center mb-3"><Sage size={64} mood="happy" /></div>
         <h2 className="text-2xl font-black text-amber-300">復習完了！</h2>
         <p className="mt-2 text-sm text-slate-300">
-          {questions.length ? `${questions.length}問中${resolved}問を苦手リストから克服しました。` : "現在、復習が必要な問題はありません。"}
+          {questions.length
+            ? `${questions.length}問中${resolved}問に正解しました。`
+            : topic
+              ? "このトピックには問題がありません。"
+              : "現在、復習が必要な問題はありません。"}
         </p>
         <button onClick={onHome} className="rpg-button mt-5 w-full rounded-xl py-3 font-black">
           マップへもどる
@@ -41,8 +45,12 @@ export default function Review({ items, onAnswer, onHome }) {
       <div className="rpg-panel mb-4 flex items-center gap-3 rounded-2xl p-3">
         <Sage size={42} mood="think" />
         <div>
-          <div className="text-[10px] font-black tracking-[.2em] text-amber-300">REVIEW QUEST</div>
-          <p className="text-sm text-emerald-100">間違えた問題を解き直して、苦手を克服するのじゃ。</p>
+          <div className="text-[10px] font-black tracking-[.2em] text-amber-300">
+            {topic ? "TOPIC TRAINING" : "REVIEW QUEST"}
+          </div>
+          <p className="text-sm text-emerald-100">
+            {topic ? `「${topic}」を集中して鍛えるのじゃ。` : "間違えた問題を解き直して、苦手を克服するのじゃ。"}
+          </p>
         </div>
       </div>
       <div className="question-shell rounded-3xl p-4">

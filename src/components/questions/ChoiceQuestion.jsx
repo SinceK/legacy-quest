@@ -63,7 +63,7 @@ export default function ChoiceQuestion({ q, onResult, onNext }) {
           explanation={q.explanation}
           wrongReason={correct ? null : q.wrongReasons?.[picked]}
           migrationTip={q.migrationTip}
-          xp={q.xp}
+          xp={q.awardXp === false ? 0 : q.xp}
           onNext={onNext}
         />
       )}

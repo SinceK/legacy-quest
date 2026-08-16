@@ -43,6 +43,37 @@ export function createQuestionSession(questions, limit = 5) {
     .map((item) => shuffleQuestionOptions(item.v));
 }
 
+/** 問題単位の回答履歴を、トピック別の理解度・回答範囲・正答率へ集計する。 */
+export function buildTopicStats(chapters, answerStats = {}) {
+  const topics = new Map();
+  for (const chapter of chapters) {
+    for (const question of chapter.questions) {
+      const current = topics.get(question.topic) ?? {
+        topic: question.topic,
+        total: 0,
+        answered: 0,
+        mastered: 0,
+        attempts: 0,
+        correctCount: 0,
+      };
+      const history = answerStats[question.id];
+      current.total += 1;
+      if (history?.attempts > 0) {
+        current.answered += 1;
+        current.attempts += history.attempts;
+        current.correctCount += history.correctCount;
+        if (history.lastCorrect) current.mastered += 1;
+      }
+      topics.set(question.topic, current);
+    }
+  }
+  return [...topics.values()].map((topic) => ({
+    ...topic,
+    mastery: topic.total ? Math.round((topic.mastered / topic.total) * 100) : 0,
+    accuracy: topic.attempts ? Math.round((topic.correctCount / topic.attempts) * 100) : 0,
+  }));
+}
+
 export function nextChapterIndex(chapters, completed) {
   return chapters.findIndex((c) => !completed.includes(c.id));
 }

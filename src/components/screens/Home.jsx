@@ -5,7 +5,7 @@ import { SKILLS, SAGE_LINES } from "../../content/index.js";
 import { nextChapterIndex } from "../../lib/game.js";
 import { useAudio } from "../../audio/AudioProvider.jsx";
 
-export default function Home({ chapters, completed, mistakeCount, onStart, onReview, onReset, hasSave }) {
+export default function Home({ chapters, completed, mistakeCount, onStart, onReview, onReport, onReset, hasSave }) {
   const { playSfx } = useAudio();
   const nextIdx = nextChapterIndex(chapters, completed);
 
@@ -27,6 +27,22 @@ export default function Home({ chapters, completed, mistakeCount, onStart, onRev
           <p className="text-sm text-emerald-50 leading-relaxed">{SAGE_LINES.home}</p>
         </div>
       </div>
+
+      <button
+        onClick={() => {
+          playSfx("select");
+          onReport();
+        }}
+        className="quest-card mb-4 flex w-full items-center gap-3 rounded-2xl border-sky-400/35 p-3.5 text-left"
+        style={{ animation: "fadeUp .45s ease-out .36s both" }}
+      >
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-2xl">📊</span>
+        <span className="flex-1">
+          <span className="block text-[10px] font-black tracking-[.2em] text-sky-300">LEARNING REPORT</span>
+          <span className="font-black text-slate-50">トピック別の理解度を見る</span>
+        </span>
+        <span className="text-sky-300">→</span>
+      </button>
 
       {mistakeCount > 0 && (
         <button

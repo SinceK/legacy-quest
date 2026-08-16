@@ -12,7 +12,7 @@ export default function Feedback({ correct, explanation, wrongReason, migrationT
       style={{ animation: "popIn .3s ease-out" }}
     >
       {correct && <Sparkles />}
-      {correct && (
+      {correct && xp > 0 && (
         <span className="absolute right-3 top-2 text-amber-300 font-black" style={{ animation: "riseFade 1s ease-out forwards" }}>
           ＋{xp} XP
         </span>
