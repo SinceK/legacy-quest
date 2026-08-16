@@ -1,5 +1,33 @@
 import Sage from "../characters/Sage.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
+import { DIFFICULTY_LABELS } from "../../lib/game.js";
+
+const DIFFICULTY_STYLES = {
+  beginner: {
+    icon: "🌱",
+    card: "border-emerald-400/35 bg-emerald-400/10 hover:bg-emerald-400/15",
+    text: "text-emerald-200",
+    bar: "#34d399",
+  },
+  intermediate: {
+    icon: "⚔️",
+    card: "border-sky-400/35 bg-sky-400/10 hover:bg-sky-400/15",
+    text: "text-sky-200",
+    bar: "#38bdf8",
+  },
+  advanced: {
+    icon: "🔮",
+    card: "border-violet-400/35 bg-violet-400/10 hover:bg-violet-400/15",
+    text: "text-violet-200",
+    bar: "#a78bfa",
+  },
+  practical: {
+    icon: "🧩",
+    card: "border-amber-400/35 bg-amber-400/10 hover:bg-amber-400/15",
+    text: "text-amber-200",
+    bar: "#fbbf24",
+  },
+};
 
 function tone(score, answered) {
   if (!answered) return { bar: "#475569", text: "text-slate-400", label: "未挑戦" };
@@ -8,7 +36,7 @@ function tone(score, answered) {
   return { bar: "#fb7185", text: "text-rose-300", label: "要復習" };
 }
 
-export default function LearningReport({ stats, onReviewTopic, onHome }) {
+export default function LearningReport({ stats, difficultyStats, onReviewTopic, onReviewDifficulty, onHome }) {
   const { playSfx } = useAudio();
   const summary = stats.reduce(
     (result, topic) => ({
@@ -48,6 +76,52 @@ export default function LearningReport({ stats, onReviewTopic, onHome }) {
         </div>
       </div>
 
+      <section className="rpg-panel mb-4 rounded-3xl p-4" style={{ animation: "fadeUp .45s ease-out .08s both" }}>
+        <div className="mb-3">
+          <div className="text-[10px] font-black tracking-[.2em] text-sky-300">DIFFICULTY TRAINING</div>
+          <h3 className="text-lg font-black text-slate-50">難易度を選んで特訓</h3>
+          <p className="mt-0.5 text-xs text-slate-400">選んだレベルの問題だけに挑戦できます</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2.5">
+          {difficultyStats.map((difficulty) => {
+            const style = DIFFICULTY_STYLES[difficulty.difficulty] ?? DIFFICULTY_STYLES.beginner;
+            return (
+              <button
+                key={difficulty.difficulty}
+                onClick={() => {
+                  playSfx("select");
+                  onReviewDifficulty(difficulty.difficulty);
+                }}
+                className={`rounded-2xl border p-3 text-left transition-colors ${style.card}`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-xl" aria-hidden="true">{style.icon}</span>
+                  <span className={`text-sm font-black ${style.text}`}>{difficulty.mastery}%</span>
+                </div>
+                <div className={`mt-1 font-black ${style.text}`}>
+                  {DIFFICULTY_LABELS[difficulty.difficulty] ?? difficulty.difficulty}
+                </div>
+                <div className="mt-0.5 text-[10px] text-slate-400">
+                  回答 {difficulty.answered}/{difficulty.total}問
+                  {difficulty.attempts > 0 ? `・正答率 ${difficulty.accuracy}%` : ""}
+                </div>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-950/80">
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${difficulty.mastery}%`, background: style.bar }}
+                  />
+                </div>
+                <div className="mt-2 text-right text-[10px] font-black text-slate-200">このレベルに挑戦 →</div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <div className="mb-3 px-1">
+        <div className="text-[10px] font-black tracking-[.2em] text-amber-300">TOPIC TRAINING</div>
+        <h3 className="text-lg font-black text-slate-50">トピックを選んで特訓</h3>
+      </div>
       <div className="space-y-3">
         {ordered.map((topic, index) => {
           const style = tone(topic.mastery, topic.answered);

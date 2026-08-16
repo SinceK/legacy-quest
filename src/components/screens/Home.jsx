@@ -39,7 +39,7 @@ export default function Home({ chapters, completed, mistakeCount, onStart, onRev
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-2xl">📊</span>
         <span className="flex-1">
           <span className="block text-[10px] font-black tracking-[.2em] text-sky-300">LEARNING REPORT</span>
-          <span className="font-black text-slate-50">トピック別の理解度を見る</span>
+          <span className="font-black text-slate-50">トピック・難易度別に学ぶ</span>
         </span>
         <span className="text-sky-300">→</span>
       </button>

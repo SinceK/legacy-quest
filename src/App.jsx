@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CHAPTERS } from "./content/index.js";
-import { buildTopicStats, levelOf } from "./lib/game.js";
+import { buildDifficultyStats, buildTopicStats, DIFFICULTY_LABELS, levelOf } from "./lib/game.js";
 import { useGameProgress } from "./hooks/useGameProgress.js";
 import { useAudio, useBgm } from "./audio/AudioProvider.jsx";
 
@@ -35,7 +35,7 @@ export default function App() {
   const [current, setCurrent] = useState(0);
   const [lastGain, setLastGain] = useState(0);
   const [levelUp, setLevelUp] = useState(null);
-  const [reviewTopic, setReviewTopic] = useState(null);
+  const [reviewTarget, setReviewTarget] = useState(null);
 
   useBgm(BGM_BY_SCREEN[screen] ?? "map");
 
@@ -64,6 +64,10 @@ export default function App() {
     () => buildTopicStats(CHAPTERS, progress.answerStats),
     [progress.answerStats],
   );
+  const difficultyStats = useMemo(
+    () => buildDifficultyStats(CHAPTERS, progress.answerStats),
+    [progress.answerStats],
+  );
   const allQuestionItems = CHAPTERS.flatMap((chapter) =>
     chapter.questions
       .map((question) => ({
@@ -73,8 +77,8 @@ export default function App() {
       })),
   );
   const mistakeItems = allQuestionItems.filter((question) => progress.mistakes.includes(question.id));
-  const reviewItems = reviewTopic
-    ? allQuestionItems.filter((question) => question.topic === reviewTopic)
+  const reviewItems = reviewTarget
+    ? allQuestionItems.filter((question) => question[reviewTarget.kind] === reviewTarget.value)
     : mistakeItems;
 
   function startStage(index) {
@@ -145,7 +149,7 @@ export default function App() {
                 mistakeCount={mistakeItems.length}
                 onStart={startStage}
                 onReview={() => {
-                  setReviewTopic(null);
+                  setReviewTarget(null);
                   setScreen("review");
                 }}
                 onReport={() => setScreen("report")}
@@ -174,13 +178,13 @@ export default function App() {
             {screen === "review" && (
               <Review
                 items={reviewItems}
-                topic={reviewTopic}
+                target={reviewTarget}
                 onAnswer={(question, correct) => {
                   recordAnswer(question.id, correct);
                   if (correct) handleScore(question.id, question.chapter.skill, question.xp);
                 }}
                 onHome={() => {
-                  setReviewTopic(null);
+                  setReviewTarget(null);
                   setScreen("home");
                 }}
               />
@@ -188,8 +192,17 @@ export default function App() {
             {screen === "report" && (
               <LearningReport
                 stats={topicStats}
+                difficultyStats={difficultyStats}
                 onReviewTopic={(topic) => {
-                  setReviewTopic(topic);
+                  setReviewTarget({ kind: "topic", value: topic, label: topic });
+                  setScreen("review");
+                }}
+                onReviewDifficulty={(difficulty) => {
+                  setReviewTarget({
+                    kind: "difficulty",
+                    value: difficulty,
+                    label: DIFFICULTY_LABELS[difficulty] ?? difficulty,
+                  });
                   setScreen("review");
                 }}
                 onHome={() => setScreen("home")}

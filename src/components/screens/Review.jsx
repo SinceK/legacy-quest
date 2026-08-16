@@ -6,13 +6,15 @@ import QuestionView from "../questions/QuestionView.jsx";
 import Sage from "../characters/Sage.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
 
-export default function Review({ items, topic, onAnswer, onHome }) {
+export default function Review({ items, target, onAnswer, onHome }) {
   const { playSfx } = useAudio();
   const [questions] = useState(() => createQuestionSession(items, items.length));
   const [index, setIndex] = useState(0);
   const [resolved, setResolved] = useState(0);
   const done = index >= questions.length;
   const q = questions[index];
+  const isTraining = Boolean(target);
+  const trainingType = target?.kind === "difficulty" ? "難易度" : "トピック";
 
   function result(correct) {
     playSfx(correct ? "correct" : "wrong");
@@ -24,12 +26,12 @@ export default function Review({ items, topic, onAnswer, onHome }) {
     return (
       <div className="rpg-panel rounded-3xl p-6 text-center" style={{ animation: "fadeUp .45s ease-out" }}>
         <div className="flex justify-center mb-3"><Sage size={64} mood="happy" /></div>
-        <h2 className="text-2xl font-black text-amber-300">復習完了！</h2>
+        <h2 className="text-2xl font-black text-amber-300">{isTraining ? "特訓完了！" : "復習完了！"}</h2>
         <p className="mt-2 text-sm text-slate-300">
           {questions.length
             ? `${questions.length}問中${resolved}問に正解しました。`
-            : topic
-              ? "このトピックには問題がありません。"
+            : target
+              ? `この${trainingType}には問題がありません。`
               : "現在、復習が必要な問題はありません。"}
         </p>
         <button onClick={onHome} className="rpg-button mt-5 w-full rounded-xl py-3 font-black">
@@ -51,17 +53,23 @@ export default function Review({ items, topic, onAnswer, onHome }) {
         <Sage size={42} mood="think" />
         <div>
           <div className="text-[10px] font-black tracking-[.2em] text-amber-300">
-            {topic ? "TOPIC TRAINING" : "REVIEW QUEST"}
+            {target?.kind === "difficulty"
+              ? "DIFFICULTY TRAINING"
+              : target
+                ? "TOPIC TRAINING"
+                : "REVIEW QUEST"}
           </div>
           <p className="text-sm text-emerald-100">
-            {topic ? `「${topic}」を集中して鍛えるのじゃ。` : "間違えた問題を解き直して、苦手を克服するのじゃ。"}
+            {target
+              ? `「${target.label}」の問題を集中して鍛えるのじゃ。`
+              : "間違えた問題を解き直して、苦手を克服するのじゃ。"}
           </p>
         </div>
       </div>
       <div className="question-shell rounded-3xl p-4">
         <CobolPanel code={q.code ?? q.chapter.cobol} label={q.code ? "解析データ" : undefined} />
         <div className="mb-2 mt-4 flex items-center justify-between text-xs font-mono text-slate-400">
-          <span>復習 {index + 1} / {questions.length}</span>
+          <span>{isTraining ? "特訓" : "復習"} {index + 1} / {questions.length}</span>
           <span>{q.chapter.no}</span>
         </div>
         <QuestionMeta question={q} />

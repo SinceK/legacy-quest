@@ -12,6 +12,8 @@ export const DIFFICULTY_LABELS = {
   practical: "実践",
 };
 
+export const DIFFICULTY_ORDER = ["beginner", "intermediate", "advanced", "practical"];
+
 /** 元の並び順(orig index)を保ったままシャッフルする。 */
 export function shuffle(arr) {
   const a = arr.map((v, i) => ({ v, i }));
@@ -43,13 +45,14 @@ export function createQuestionSession(questions, limit = 5) {
     .map((item) => shuffleQuestionOptions(item.v));
 }
 
-/** 問題単位の回答履歴を、トピック別の理解度・回答範囲・正答率へ集計する。 */
-export function buildTopicStats(chapters, answerStats = {}) {
-  const topics = new Map();
+/** 問題単位の回答履歴を、指定した分類ごとの理解度・回答範囲・正答率へ集計する。 */
+function buildGroupedStats(chapters, answerStats, groupKey) {
+  const groups = new Map();
   for (const chapter of chapters) {
     for (const question of chapter.questions) {
-      const current = topics.get(question.topic) ?? {
-        topic: question.topic,
+      const group = question[groupKey];
+      const current = groups.get(group) ?? {
+        [groupKey]: group,
         total: 0,
         answered: 0,
         mastered: 0,
@@ -64,14 +67,26 @@ export function buildTopicStats(chapters, answerStats = {}) {
         current.correctCount += history.correctCount;
         if (history.lastCorrect) current.mastered += 1;
       }
-      topics.set(question.topic, current);
+      groups.set(group, current);
     }
   }
-  return [...topics.values()].map((topic) => ({
-    ...topic,
-    mastery: topic.total ? Math.round((topic.mastered / topic.total) * 100) : 0,
-    accuracy: topic.attempts ? Math.round((topic.correctCount / topic.attempts) * 100) : 0,
+  return [...groups.values()].map((group) => ({
+    ...group,
+    mastery: group.total ? Math.round((group.mastered / group.total) * 100) : 0,
+    accuracy: group.attempts ? Math.round((group.correctCount / group.attempts) * 100) : 0,
   }));
+}
+
+/** 問題単位の回答履歴を、トピック別に集計する。 */
+export function buildTopicStats(chapters, answerStats = {}) {
+  return buildGroupedStats(chapters, answerStats, "topic");
+}
+
+/** 問題単位の回答履歴を、難易度別に集計して表示順に並べる。 */
+export function buildDifficultyStats(chapters, answerStats = {}) {
+  return buildGroupedStats(chapters, answerStats, "difficulty").sort(
+    (a, b) => DIFFICULTY_ORDER.indexOf(a.difficulty) - DIFFICULTY_ORDER.indexOf(b.difficulty),
+  );
 }
 
 export function nextChapterIndex(chapters, completed) {
