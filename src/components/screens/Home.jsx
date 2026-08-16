@@ -5,7 +5,7 @@ import { SKILLS, SAGE_LINES } from "../../content/index.js";
 import { nextChapterIndex } from "../../lib/game.js";
 import { useAudio } from "../../audio/AudioProvider.jsx";
 
-export default function Home({ chapters, completed, onStart, onReset, hasSave }) {
+export default function Home({ chapters, completed, mistakeCount, onStart, onReview, onReset, hasSave }) {
   const { playSfx } = useAudio();
   const nextIdx = nextChapterIndex(chapters, completed);
 
@@ -27,6 +27,24 @@ export default function Home({ chapters, completed, onStart, onReset, hasSave })
           <p className="text-sm text-emerald-50 leading-relaxed">{SAGE_LINES.home}</p>
         </div>
       </div>
+
+      {mistakeCount > 0 && (
+        <button
+          onClick={() => {
+            playSfx("select");
+            onReview();
+          }}
+          className="quest-card mb-4 flex w-full items-center gap-3 rounded-2xl border-rose-400/40 p-3.5 text-left"
+          style={{ animation: "fadeUp .45s ease-out .38s both" }}
+        >
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-rose-500/15 text-2xl">📖</span>
+          <span className="flex-1">
+            <span className="block text-[10px] font-black tracking-[.2em] text-rose-300">REVIEW QUEST</span>
+            <span className="font-black text-slate-50">苦手問題に再挑戦</span>
+          </span>
+          <span className="rounded-full bg-rose-500/20 px-2.5 py-1 text-xs font-black text-rose-200">{mistakeCount}問</span>
+        </button>
+      )}
 
       <div className="relative space-y-3">
         <div className="absolute left-[35px] top-8 bottom-8 w-px bg-gradient-to-b from-amber-300 via-emerald-400 to-violet-400 opacity-50" />

@@ -16,11 +16,14 @@ export const getChapter = (id) => chapters.find((c) => c.id === id) ?? null;
 /** 開発時にコンテンツJSONの取りこぼしへ早めに気づくための軽い整合性チェック。 */
 if (import.meta.env.DEV) {
   const ids = new Set();
+  const difficulties = new Set(["beginner", "intermediate", "advanced", "practical"]);
   for (const c of chapters) {
     if (!skills[c.skill]) console.warn(`[content] 未知のskill: ${c.skill} (${c.id})`);
     for (const q of c.questions) {
       if (ids.has(q.id)) console.warn(`[content] 問題IDが重複: ${q.id}`);
       ids.add(q.id);
+      if (!q.topic) console.warn(`[content] topicが未設定: ${q.id}`);
+      if (!difficulties.has(q.difficulty)) console.warn(`[content] difficultyが不正: ${q.id}`);
       if ((q.type === "choice" || q.type === "fill") && q.options?.[q.answer] === undefined) {
         console.warn(`[content] answerが選択肢の範囲外: ${q.id}`);
       }

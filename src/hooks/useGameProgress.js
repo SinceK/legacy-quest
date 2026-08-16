@@ -12,6 +12,7 @@ const emptyProgress = () => ({
   skills: { ...EMPTY_SKILLS },
   completed: [],
   scored: [],
+  mistakes: [],
   introSeen: false,
 });
 
@@ -25,6 +26,7 @@ function load() {
     skills: { ...base.skills, ...(saved.skills ?? {}) },
     completed: Array.isArray(saved.completed) ? saved.completed : [],
     scored: Array.isArray(saved.scored) ? saved.scored : [],
+    mistakes: Array.isArray(saved.mistakes) ? saved.mistakes : [],
   };
 }
 
@@ -54,6 +56,16 @@ export function useGameProgress() {
     );
   }, []);
 
+  const recordAnswer = useCallback((questionId, correct) => {
+    setProgress((p) => {
+      const hasMistake = p.mistakes.includes(questionId);
+      if (correct) {
+        return hasMistake ? { ...p, mistakes: p.mistakes.filter((id) => id !== questionId) } : p;
+      }
+      return hasMistake ? p : { ...p, mistakes: [...p.mistakes, questionId] };
+    });
+  }, []);
+
   const markIntroSeen = useCallback(() => {
     setProgress((p) => (p.introSeen ? p : { ...p, introSeen: true }));
   }, []);
@@ -64,9 +76,9 @@ export function useGameProgress() {
   }, []);
 
   const hasSave = useMemo(
-    () => progress.xp > 0 || progress.completed.length > 0,
-    [progress.xp, progress.completed.length],
+    () => progress.xp > 0 || progress.completed.length > 0 || progress.mistakes.length > 0,
+    [progress.xp, progress.completed.length, progress.mistakes.length],
   );
 
-  return { progress, addScore, completeChapter, markIntroSeen, reset, hasSave };
+  return { progress, addScore, recordAnswer, completeChapter, markIntroSeen, reset, hasSave };
 }

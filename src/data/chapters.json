@@ -20,6 +20,8 @@
       {
         "id": "ch1-q1",
         "type": "fill",
+        "topic": "MOVE・代入",
+        "difficulty": "beginner",
         "prompt": "MOVE 'HELLO' TO WS-NAME. をJavaにすると？",
         "javaTemplate": "String wsName = ⬚;",
         "options": ["\"HELLO\"", "'HELLO'", "HELLO", "new String(HELLO)"],
@@ -30,6 +32,8 @@
       {
         "id": "ch1-q2",
         "type": "choice",
+        "topic": "PIC・データ型",
+        "difficulty": "beginner",
         "prompt": "WS-COUNT PIC 9(3) に最も合うJavaの型は？",
         "options": ["int", "String", "double", "boolean"],
         "answer": 0,
@@ -39,6 +43,8 @@
       {
         "id": "ch1-q3",
         "type": "matching",
+        "topic": "PIC・データ型",
+        "difficulty": "intermediate",
         "prompt": "PIC句とJavaの型を対応づけよ",
         "pairs": [
           { "left": "PIC X(10)", "right": "String" },
@@ -51,6 +57,8 @@
       {
         "id": "ch1-q4",
         "type": "choice",
+        "topic": "REDEFINES",
+        "difficulty": "intermediate",
         "prompt": "REDEFINES句の役割として正しいものは？",
         "options": [
           "同じ記憶領域を別のデータ構造として解釈する",
@@ -65,6 +73,8 @@
       {
         "id": "ch1-q5",
         "type": "choice",
+        "topic": "OCCURS",
+        "difficulty": "intermediate",
         "prompt": "05 ITEM PIC X(10) OCCURS 20 TIMES. に対応する考え方は？",
         "options": [
           "10文字の項目を20個持つ配列",
@@ -79,6 +89,8 @@
       {
         "id": "ch1-q6",
         "type": "choice",
+        "topic": "FILLER・固定長",
+        "difficulty": "practical",
         "prompt": "固定長レコード内の 05 FILLER PIC X(5). を移行するときの注意は？",
         "options": [
           "名前がなくても5バイト分の位置を保つ必要がある",
@@ -93,6 +105,8 @@
       {
         "id": "ch1-q7",
         "type": "choice",
+        "topic": "COPY句",
+        "difficulty": "intermediate",
         "prompt": "COPY CUSTOMER-REC. の主な目的は？",
         "options": [
           "共通のデータ定義などをコピー句として取り込む",
@@ -128,6 +142,8 @@
       {
         "id": "ch2-q1",
         "type": "matching",
+        "topic": "Spring Batch",
+        "difficulty": "beginner",
         "prompt": "バッチの役割を Spring Batch の部品に対応づけよ",
         "pairs": [
           { "left": "入力を1件読む", "right": "ItemReader" },
@@ -141,6 +157,8 @@
       {
         "id": "ch2-q2",
         "type": "choice",
+        "topic": "Spring Batch",
+        "difficulty": "intermediate",
         "prompt": "CALC-TAX(1件ごとに税を計算して書き換える処理)を置く場所は？",
         "options": ["ItemProcessor", "ItemReader", "ItemWriter", "JobLauncher"],
         "answer": 0,
@@ -150,6 +168,8 @@
       {
         "id": "ch2-q3",
         "type": "ordering",
+        "topic": "Spring Batch",
+        "difficulty": "intermediate",
         "prompt": "chunk指向処理の流れを正しい順に並べよ",
         "items": [
           "Readerで1件読む",
@@ -163,6 +183,8 @@
       {
         "id": "ch2-q4",
         "type": "choice",
+        "topic": "サブルーチン",
+        "difficulty": "advanced",
         "prompt": "CALL 'CALC-TAX' USING IN-REC OUT-REC. をJavaへ移す際に最も重要な確認は？",
         "options": [
           "呼出方式とUSING引数、共有領域、副作用を明らかにする",
@@ -197,6 +219,8 @@
       {
         "id": "ch3-q1",
         "type": "ordering",
+        "topic": "移行計画",
+        "difficulty": "beginner",
         "prompt": "移行の工程を正しい順に並べよ",
         "items": [
           "現状分析(資産の棚卸し)",
@@ -211,6 +235,8 @@
       {
         "id": "ch3-q2",
         "type": "choice",
+        "topic": "現状分析",
+        "difficulty": "beginner",
         "prompt": "資産の量や依存関係を把握するのはどの工程？",
         "options": ["現状分析(棚卸し)", "テスト", "本番切替", "変換"],
         "answer": 0,
@@ -220,6 +246,8 @@
       {
         "id": "ch3-q3",
         "type": "choice",
+        "topic": "移行方式",
+        "difficulty": "intermediate",
         "prompt": "大規模システムでリスクを抑える進め方は？",
         "options": [
           "一部ずつ移行し、都度検証しながら進める",
@@ -234,6 +262,8 @@
       {
         "id": "ch3-q4",
         "type": "ordering",
+        "topic": "外字移行",
+        "difficulty": "practical",
         "prompt": "外字を含むデータ移行の安全な手順を並べよ",
         "items": [
           "使用中の外字と出現箇所を棚卸しする",
@@ -247,6 +277,8 @@
       {
         "id": "ch3-q5",
         "type": "choice",
+        "topic": "文字コード移行",
+        "difficulty": "practical",
         "prompt": "文字コード移行テストで、単純な件数比較だけでは不十分な理由は？",
         "options": [
           "同じ件数でも文字化け、欠落、別文字への誤変換が起こり得る",
@@ -281,6 +313,8 @@
       {
         "id": "ch4-q1",
         "type": "choice",
+        "topic": "COMP-3",
+        "difficulty": "intermediate",
         "prompt": "COMP-3の金額(S9(7)V99)をJavaで正確に扱う型は？",
         "options": ["BigDecimal", "double", "float", "int"],
         "answer": 0,
@@ -290,6 +324,8 @@
       {
         "id": "ch4-q2",
         "type": "choice",
+        "topic": "数値精度",
+        "difficulty": "practical",
         "prompt": "金額計算に double を使うと何が問題？",
         "options": [
           "2進浮動小数点は10進小数を正確に表せず誤差が出る",
@@ -304,6 +340,8 @@
       {
         "id": "ch4-q3",
         "type": "choice",
+        "topic": "BigDecimal",
+        "difficulty": "practical",
         "prompt": "金額 123.45 を誤差なく生成するのは？(罠に注意！)",
         "options": [
           "new BigDecimal(\"123.45\")",
@@ -318,6 +356,8 @@
       {
         "id": "ch4-q4",
         "type": "choice",
+        "topic": "COMP-3内部表現",
+        "difficulty": "advanced",
         "prompt": "PIC S9(5) COMP-3 が使用する記憶域は何バイト？",
         "options": ["3バイト", "5バイト", "6バイト", "10バイト"],
         "answer": 0,
@@ -327,6 +367,8 @@
       {
         "id": "ch4-q5",
         "type": "matching",
+        "topic": "日本語EBCDIC",
+        "difficulty": "intermediate",
         "prompt": "日本語EBCDICのCCSIDと特徴を対応づけよ",
         "pairs": [
           { "left": "IBM-930", "right": "カタカナ系SBCS＋漢字DBCS" },
@@ -339,6 +381,8 @@
       {
         "id": "ch4-q6",
         "type": "matching",
+        "topic": "SBCS・DBCS",
+        "difficulty": "beginner",
         "prompt": "SBCS・DBCS・混合データの意味を対応づけよ",
         "pairs": [
           { "left": "SBCS", "right": "1文字を1バイトで表す文字集合" },
@@ -351,6 +395,8 @@
       {
         "id": "ch4-q7",
         "type": "choice",
+        "topic": "SI・SO",
+        "difficulty": "intermediate",
         "prompt": "日本語の混合EBCDICデータにあるSO(X'0E')とSI(X'0F')の役割は？",
         "options": [
           "SOでDBCS領域を開始し、SIでSBCS領域へ戻す",

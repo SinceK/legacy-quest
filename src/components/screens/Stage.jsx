@@ -5,9 +5,11 @@ import Monster from "../characters/Monster.jsx";
 import CobolPanel from "../ui/CobolPanel.jsx";
 import Impact from "../ui/Impact.jsx";
 import QuestionView from "../questions/QuestionView.jsx";
+import QuestionMeta from "../questions/QuestionMeta.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
+import { createQuestionSession } from "../../lib/game.js";
 
-export default function Stage({ chapter, onScore, onComplete, onHome }) {
+export default function Stage({ chapter, onScore, onAnswer, onComplete, onHome }) {
   const { playSfx } = useAudio();
   const [phase, setPhase] = useState("dive");
   const [qi, setQi] = useState(0);
@@ -15,9 +17,10 @@ export default function Stage({ chapter, onScore, onComplete, onHome }) {
   const [fx, setFx] = useState({ key: 0, type: "crit", dmg: 0 });
   const [pop, setPop] = useState(null);
   const [combo, setCombo] = useState(0);
+  const [questions] = useState(() => createQuestionSession(chapter.questions));
 
-  const q = chapter.questions[qi];
-  const total = chapter.questions.length;
+  const q = questions[qi];
+  const total = questions.length;
   const hpPct = ((total - answered) / total) * 100;
   const defeated = answered >= total;
 
@@ -27,6 +30,7 @@ export default function Stage({ chapter, onScore, onComplete, onHome }) {
     setFx({ key: fx.key + 1, type: correct ? "crit" : "miss", dmg: q.xp });
 
     playSfx(correct ? "correct" : "wrong");
+    onAnswer(q.id, correct);
     if (isFinalBlow) setTimeout(() => playSfx("defeat"), 280);
 
     if (correct) {
@@ -154,6 +158,7 @@ export default function Stage({ chapter, onScore, onComplete, onHome }) {
           </span>
           <span className="text-xs text-amber-300 font-mono">＋{q.xp} XP</span>
         </div>
+        <QuestionMeta question={q} />
         <h2 className="font-bold text-slate-100 mb-3">{q.prompt}</h2>
 
         <QuestionView q={q} onResult={result} onNext={next} />

@@ -13,6 +13,7 @@ import Home from "./components/screens/Home.jsx";
 import Stage from "./components/screens/Stage.jsx";
 import ChapterResult from "./components/screens/ChapterResult.jsx";
 import Victory from "./components/screens/Victory.jsx";
+import Review from "./components/screens/Review.jsx";
 
 const BGM_BY_SCREEN = {
   intro: "title",
@@ -20,10 +21,11 @@ const BGM_BY_SCREEN = {
   result: "map",
   stage: "battle",
   victory: "victory",
+  review: "map",
 };
 
 export default function App() {
-  const { progress, addScore, completeChapter, markIntroSeen, reset, hasSave } = useGameProgress();
+  const { progress, addScore, recordAnswer, completeChapter, markIntroSeen, reset, hasSave } = useGameProgress();
   const { playSfx } = useAudio();
 
   // 一度オープニングを見ていればマップから再開する
@@ -54,6 +56,12 @@ export default function App() {
     setLastGain((g) => g + amount);
     addScore(questionId, skill, amount);
   }
+
+  const reviewItems = CHAPTERS.flatMap((chapter) =>
+    chapter.questions
+      .filter((question) => progress.mistakes.includes(question.id))
+      .map((question) => ({ ...question, chapter })),
+  );
 
   function startStage(index) {
     setCurrent(index);
@@ -120,7 +128,9 @@ export default function App() {
               <Home
                 chapters={CHAPTERS}
                 completed={progress.completed}
+                mistakeCount={reviewItems.length}
                 onStart={startStage}
+                onReview={() => setScreen("review")}
                 onReset={handleReset}
                 hasSave={hasSave}
               />
@@ -129,6 +139,7 @@ export default function App() {
               <Stage
                 chapter={CHAPTERS[current]}
                 onScore={handleScore}
+                onAnswer={recordAnswer}
                 onComplete={completeStage}
                 onHome={() => setScreen("home")}
               />
@@ -142,6 +153,16 @@ export default function App() {
               />
             )}
             {screen === "victory" && <Victory xp={progress.xp} onReset={handleReset} />}
+            {screen === "review" && (
+              <Review
+                items={reviewItems}
+                onAnswer={(question, correct) => {
+                  recordAnswer(question.id, correct);
+                  if (correct) handleScore(question.id, question.chapter.skill, question.xp);
+                }}
+                onHome={() => setScreen("home")}
+              />
+            )}
           </div>
           <p className="text-center text-xs text-slate-600 mt-8 font-mono">
             進捗はこのブラウザに自動保存されます
