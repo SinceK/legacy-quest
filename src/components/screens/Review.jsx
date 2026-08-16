@@ -54,7 +54,7 @@ export default function Review({ items, topic, onAnswer, onHome }) {
         </div>
       </div>
       <div className="question-shell rounded-3xl p-4">
-        <CobolPanel code={q.chapter.cobol} />
+        <CobolPanel code={q.code ?? q.chapter.cobol} label={q.code ? "解析データ" : undefined} />
         <div className="mb-2 mt-4 flex items-center justify-between text-xs font-mono text-slate-400">
           <span>復習 {index + 1} / {questions.length}</span>
           <span>{q.chapter.no}</span>

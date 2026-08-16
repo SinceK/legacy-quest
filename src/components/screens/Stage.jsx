@@ -150,7 +150,7 @@ export default function Stage({ chapter, onScore, onAnswer, onComplete, onHome }
 
       <div className="question-shell rounded-3xl p-4">
         <div className="mb-4">
-          <CobolPanel code={chapter.cobol} />
+          <CobolPanel code={q.code ?? chapter.cobol} label={q.code ? "解析データ" : undefined} />
         </div>
         <div className="flex justify-between items-center mb-2">
           <span className="text-xs text-slate-400 font-mono">

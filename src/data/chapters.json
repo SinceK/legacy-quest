@@ -161,6 +161,44 @@
         ],
         "migrationTip": "COPY REPLACINGや複数版のコピーブックを含めて依存関係を調査し、共通モデルの変更影響を管理する。",
         "xp": 15
+      },
+      {
+        "id": "ch1-q8",
+        "type": "choice",
+        "topic": "FILLER・固定長",
+        "difficulty": "practical",
+        "code": "01 CUSTOMER-REC.\n   05 CUSTOMER-ID PIC X(4).\n   05 FILLER      PIC X(3).\n   05 CUSTOMER-NAME PIC X(10).",
+        "prompt": "レコード先頭を1バイト目とすると、CUSTOMER-NAMEは何バイト目から始まる？",
+        "options": ["8バイト目", "5バイト目", "7バイト目", "18バイト目"],
+        "answer": 0,
+        "explanation": "CUSTOMER-IDが1〜4バイト目、FILLERが5〜7バイト目を占めるため、CUSTOMER-NAMEは8バイト目から始まる。",
+        "wrongReasons": [
+          null,
+          "5バイト目はFILLERの開始位置であり、CUSTOMER-NAMEの開始位置ではない。",
+          "7バイト目は3バイトあるFILLERの最終位置であり、次の項目は8バイト目から始まる。",
+          "18はレコード全体17バイトの次であり、CUSTOMER-NAMEの開始位置ではない。"
+        ],
+        "migrationTip": "固定長レコードでは各項目の開始offset・長さ・終了位置を一覧化し、境界値を含むテストデータで切り出し結果を確認する。",
+        "xp": 25
+      },
+      {
+        "id": "ch1-q9",
+        "type": "choice",
+        "topic": "REDEFINES",
+        "difficulty": "practical",
+        "code": "01 IN-REC.\n   05 REC-TYPE PIC X.\n      88 TYPE-SALES  VALUE 'S'.\n      88 TYPE-CANCEL VALUE 'C'.\n   05 REC-BODY PIC X(9).\n01 SALES-REC REDEFINES IN-REC.\n   05 FILLER PIC X.\n   05 AMOUNT PIC 9(9).\n01 CANCEL-REC REDEFINES IN-REC.\n   05 FILLER PIC X.\n   05 REASON PIC X(9).\n\n受信値: COLD-DATA!",
+        "prompt": "REC-TYPEを判別項目として使う場合、業務上選択すべきレイアウトは？",
+        "options": ["CANCEL-REC", "SALES-REC", "両方を同時に有効な値として処理する", "どちらのレイアウトも使用できない"],
+        "answer": 0,
+        "explanation": "先頭のREC-TYPEは'C'なのでTYPE-CANCELに一致する。同じ領域をCANCEL-RECとして解釈し、後続9バイトをREASONとして扱う。",
+        "wrongReasons": [
+          null,
+          "SALES-RECを選ぶ判別値は'S'であり、受信値の先頭'C'とは一致しない。",
+          "物理的には同じ領域をどちらでも参照できるが、業務上の有効な解釈は判別項目で一つに決める。",
+          "TYPE-CANCEL VALUE 'C'が定義されているため、CANCEL-RECとして処理できる。"
+        ],
+        "migrationTip": "判別値と各REDEFINESレイアウトの対応を表にし、Javaでは判別後に適切な型へ変換して不正な組み合わせを表現しにくくする。",
+        "xp": 25
       }
     ]
   },
@@ -376,6 +414,24 @@
         ],
         "migrationTip": "文字単位の照合に加え、変換不能文字、代替文字、バイト長、固定長レコードのオフセットを自動検査する。",
         "xp": 15
+      },
+      {
+        "id": "ch3-q6",
+        "type": "ordering",
+        "topic": "COPY句",
+        "difficulty": "practical",
+        "code": "依存関係:\nORDER-JOB  ─CALL→ ORDER-CALC\nORDER-JOB  ─COPY→ ORDER-REC\nORDER-CALC ─COPY→ ORDER-REC",
+        "prompt": "COPY句を共有する資産を安全に移行する順序へ並べよ",
+        "items": [
+          "ORDER-RECの項目・利用箇所・版差分を棚卸しする",
+          "共通OrderRecord DTOと変換テストを作る",
+          "DTOを使うORDER-CALC相当のサービスを移行する",
+          "サービスを呼ぶORDER-JOB相当のジョブを移行する"
+        ],
+        "explanation": "共有定義を先に分析・共通モデル化し、それに依存する下位処理ORDER-CALC、最後に呼出元ORDER-JOBの順で移すと依存関係を制御しやすい。",
+        "wrongReason": "呼出元から先に移すと、未確定の共有レイアウトや未移行の呼出先に依存する。共有定義から依存の下流、上流へ進める。",
+        "migrationTip": "単純なファイル順ではなく、COPYとCALLを含む依存グラフを作り、循環依存とCOPY REPLACINGによる定義差も検出する。",
+        "xp": 25
       }
     ]
   },
@@ -533,6 +589,49 @@
         ],
         "migrationTip": "SO/SIを単純削除せず、IBM-930/939対応デコーダーへ完全なバイト列を渡す。欠落や不正な入れ子も検出する。",
         "xp": 20
+      },
+      {
+        "id": "ch4-q8",
+        "type": "choice",
+        "topic": "SI・SO",
+        "difficulty": "practical",
+        "code": "CCSID 930 混合データ（16進）\nC1 C2 0E 42 41 42 42 0F C3\n      ↑SO             ↑SI",
+        "prompt": "SO/SI自体を除き、DBCS文字として解釈されるバイト列は？",
+        "options": [
+          "42 41 42 42（2文字分）",
+          "0E 42 41 42 42 0F（制御コード込み）",
+          "C1 C2 C3（3文字分）",
+          "42 41 42（3バイト）"
+        ],
+        "answer": 0,
+        "explanation": "X'0E'の直後からX'0F'の直前までがDBCS領域。4バイトを2バイトずつ読み、42 41と42 42の2文字として解釈する。",
+        "wrongReasons": [
+          null,
+          "0Eと0FはDBCS文字そのものではなく、DBCS領域の開始と終了を示す制御コードである。",
+          "C1 C2はSOより前、C3はSIより後なのでSBCSとして解釈される。",
+          "DBCS領域のバイト数は偶数である必要があり、SI直前までの4バイトを対象にする。"
+        ],
+        "migrationTip": "バイト列を途中で分割するとSO/SIの状態を失う。固定長項目やストリームの境界を含め、完全な混合文字列としてデコードする。",
+        "xp": 25
+      },
+      {
+        "id": "ch4-q9",
+        "type": "choice",
+        "topic": "COMP-3内部表現",
+        "difficulty": "practical",
+        "code": "05 AMOUNT PIC S9(3)V99 COMP-3.\n\n格納バイト: X'12345D'",
+        "prompt": "このCOMP-3データが表す値は？",
+        "options": ["-123.45", "+123.45", "-12345", "不正なCOMP-3データ"],
+        "answer": 0,
+        "explanation": "末尾以外のニブル1〜5が数字12345、末尾Dが負符号を表す。V99により小数2桁なので値は-123.45となる。",
+        "wrongReasons": [
+          null,
+          "末尾ニブルDは負符号である。正値では通常C、符号なしではFなどが使われる。",
+          "V99は末尾2桁を小数部として扱うため、整数-12345ではない。",
+          "数字ニブルは0〜9で、末尾Dも有効な負符号なので正しいパック10進データである。"
+        ],
+        "migrationTip": "生バイトからBigDecimalへ変換するときは、PICの総桁数、scale=2、符号ニブルをセットで扱い、負数とゼロを必ず試験する。",
+        "xp": 25
       }
     ]
   }
