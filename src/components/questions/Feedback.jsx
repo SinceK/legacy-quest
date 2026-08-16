@@ -6,7 +6,7 @@ export default function Feedback({ correct, explanation, xp, onNext }) {
   return (
     <div
       className={
-        "relative mt-4 rounded-lg p-4 border overflow-hidden " +
+        "rpg-panel relative mt-4 rounded-2xl p-4 border overflow-hidden " +
         (correct ? "border-emerald-500 bg-emerald-950" : "border-rose-500 bg-rose-950")
       }
       style={{ animation: "popIn .3s ease-out" }}
@@ -26,7 +26,7 @@ export default function Feedback({ correct, explanation, xp, onNext }) {
           playSfx("select");
           onNext();
         }}
-        className="relative mt-3 w-full py-2.5 rounded-lg bg-amber-400 text-slate-900 font-bold hover:bg-amber-300"
+        className="relative rpg-button mt-3 w-full py-2.5 rounded-xl text-white font-bold"
       >
         つぎへ →
       </button>

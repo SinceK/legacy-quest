@@ -25,7 +25,7 @@ export default function MatchingQuestion({ q, onResult, onNext }) {
           return (
             <div
               key={i}
-              className="flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-2"
+              className="answer-card flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800/80 px-3 py-2"
               style={{ animation: "fadeUp .3s both", animationDelay: `${i * 45}ms` }}
             >
               <span className="flex-1 font-mono text-sm text-emerald-200">{p.left}</span>
@@ -64,7 +64,7 @@ export default function MatchingQuestion({ q, onResult, onNext }) {
           onClick={check}
           disabled={!allSet}
           className={
-            "mt-4 w-full py-3 rounded-lg font-bold " +
+            "rpg-button mt-4 w-full py-3 rounded-xl font-bold " +
             (allSet ? "bg-amber-400 text-slate-900 hover:bg-amber-300" : "bg-slate-700 text-slate-500")
           }
         >
