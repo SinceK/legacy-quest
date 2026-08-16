@@ -1,6 +1,8 @@
 import Emblem from "../ui/Emblem.jsx";
 import NightSky from "../ui/NightSky.jsx";
 import Embers from "../ui/Embers.jsx";
+import LightRays from "../ui/LightRays.jsx";
+import FilmGrain from "../ui/FilmGrain.jsx";
 
 /**
  * ブラウザの自動再生制限により、最初のユーザー操作までは音を鳴らせない。
@@ -14,6 +16,7 @@ export default function IntroGate({ onStart }) {
       style={{ background: "#02040a" }}
     >
       <NightSky intensity={0.5} moon={false} />
+      <LightRays count={3} intensity={0.6} />
       <Embers count={14} intensity={0.6} />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
@@ -41,6 +44,7 @@ export default function IntroGate({ onStart }) {
           音はあとから消せます
         </p>
       </div>
+      <FilmGrain opacity={0.045} />
     </button>
   );
 }

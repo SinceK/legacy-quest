@@ -99,6 +99,16 @@
       { "noise": true, "start": 0.02, "dur": 0.25, "filter": "highpass", "from": 4000, "to": 9000, "gain": 0.45 }
     ]
   },
+  "sparkle": {
+    "gain": 0.2,
+    "tones": [
+      { "wave": "sine", "note": "A6", "start": 0, "dur": 0.14 },
+      { "wave": "sine", "note": "E7", "start": 0.06, "dur": 0.16, "gain": 0.6 },
+      { "wave": "sine", "note": "C7", "start": 0.13, "dur": 0.18, "gain": 0.5 },
+      { "wave": "sine", "note": "G6", "start": 0.22, "dur": 0.2, "gain": 0.4 },
+      { "wave": "sine", "note": "B6", "start": 0.3, "dur": 0.2, "gain": 0.32 }
+    ]
+  },
   "chime": {
     "gain": 0.26,
     "tones": [

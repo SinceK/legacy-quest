@@ -445,24 +445,35 @@ body {
     transform: scale(1.12) translate(-2%, -3%);
   }
 }
+/* カットが変わるたび、ピントを送り込むように少しずつ像を結ばせる */
 @keyframes cineIn {
   0% {
     opacity: 0;
-    transform: scale(1.05);
+    transform: scale(1.06);
+    filter: blur(9px);
+  }
+  55% {
+    filter: blur(2px);
   }
   100% {
     opacity: 1;
     transform: scale(1);
+    filter: blur(0);
   }
 }
+/* 字幕は文字間が開いた状態からゆっくり閉じながら像を結ぶ、映画の題字のような入り方 */
 @keyframes captionIn {
   0% {
     opacity: 0;
     transform: translateY(12px);
+    letter-spacing: 0.14em;
+    filter: blur(3px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
+    letter-spacing: normal;
+    filter: blur(0);
   }
 }
 @keyframes orbPulse {
@@ -703,30 +714,7 @@ body {
   }
 }
 
-/* 稲妻の二度打ち */
-@keyframes boltStrike {
-  0%,
-  57% {
-    opacity: 0;
-  }
-  60% {
-    opacity: 1;
-  }
-  64% {
-    opacity: 0.15;
-  }
-  68% {
-    opacity: 0.9;
-  }
-  76% {
-    opacity: 0.1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* 着地の衝撃で画面が白く飛ぶ */
+/* 像を結ぶ瞬間、画面全体が金色にふわりと満ちる */
 @keyframes impactFlash {
   0%,
   58% {
@@ -766,6 +754,110 @@ body {
   100% {
     transform: translate3d(var(--drift, 12px), -120px, 0) scale(1.1);
     opacity: 0;
+  }
+}
+
+/* 光条（ゴッドレイ）がゆっくり揺れる */
+@keyframes raySway {
+  0% {
+    opacity: 0.6;
+    transform: rotate(var(--rot, -10deg)) translateX(-2%);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(var(--rot, -10deg)) translateX(2%);
+  }
+}
+
+/* フィルムグレインの粒立ちを小刻みにずらす */
+@keyframes grainShift {
+  0% {
+    background-position: 0 0;
+  }
+  20% {
+    background-position: -18px 9px;
+  }
+  40% {
+    background-position: 13px -14px;
+  }
+  60% {
+    background-position: -9px -9px;
+  }
+  80% {
+    background-position: 17px 6px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* シーン切り替え時の一瞬の暗転（シャッター音のようなカット感） */
+@keyframes shutterFlash {
+  0% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ケンバーンズのバリエーション。シーンごとに寄り引き・パン方向を変えてカメラの意思を出す */
+@keyframes kenburnsA {
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.15) translate(-3%, -4%) rotate(-0.6deg);
+  }
+}
+@keyframes kenburnsB {
+  0% {
+    transform: scale(1.06) translate(2%, 1%) rotate(0.5deg);
+  }
+  100% {
+    transform: scale(1.18) translate(-2%, -2%) rotate(-0.4deg);
+  }
+}
+@keyframes kenburnsC {
+  0% {
+    transform: scale(1) translate(-2%, 1%) rotate(-0.4deg);
+  }
+  100% {
+    transform: scale(1.2) translate(3%, -3%) rotate(0.6deg);
+  }
+}
+
+/* 結像する中心から放射状に伸びるレンズフレア（中心の光球） */
+@keyframes flareBurst {
+  0%,
+  57% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  66% {
+    opacity: 0.9;
+    transform: scale(1.35) rotate(8deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7) rotate(14deg);
+  }
+}
+
+/* レンズフレアの光条（回転済みの箱の中で伸縮させるだけにする） */
+@keyframes flareStreak {
+  0%,
+  57% {
+    opacity: 0;
+    transform: scaleX(0.15);
+  }
+  66% {
+    opacity: 0.9;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.3);
   }
 }
 

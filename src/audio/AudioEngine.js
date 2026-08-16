@@ -19,6 +19,7 @@ export class AudioEngine {
     this.timer = null;
     this.nextLoopAt = 0;
     this.noiseBuffer = null;
+    this.activeBgmSources = new Set();
     this.settings = { bgmEnabled: true, sfxEnabled: true, volume: 0.7 };
   }
 
@@ -144,6 +145,26 @@ export class AudioEngine {
   stopScheduler() {
     if (this.timer) clearInterval(this.timer);
     this.timer = null;
+    this.silenceBgmSources();
+  }
+
+  // tickは1ループ分をまとめて先行スケジュールするため、切り替え時は
+  // 予約済みのノードを明示的に止めないと前の曲が鳴り続けてしまう
+  silenceBgmSources() {
+    if (!this.activeBgmSources.size) return;
+    const now = this.ctx?.currentTime ?? 0;
+    const FADE = 0.04;
+    for (const { src, amp } of this.activeBgmSources) {
+      try {
+        amp.gain.cancelScheduledValues(now);
+        amp.gain.setValueAtTime(Math.max(amp.gain.value, SILENCE), now);
+        amp.gain.linearRampToValueAtTime(SILENCE, now + FADE);
+        src.stop(now + FADE + 0.01);
+      } catch {
+        // 既に停止済みのノードは無視する
+      }
+    }
+    this.activeBgmSources.clear();
   }
 
   tick() {
@@ -226,7 +247,12 @@ export class AudioEngine {
     amp.connect(dest);
     osc.start(when);
     osc.stop(when + dur + 0.03);
-    osc.onended = () => amp.disconnect();
+    const entry = { src: osc, amp };
+    if (dest === this.nodes.bgm) this.activeBgmSources.add(entry);
+    osc.onended = () => {
+      amp.disconnect();
+      this.activeBgmSources.delete(entry);
+    };
   }
 
   getNoiseBuffer() {
@@ -259,7 +285,12 @@ export class AudioEngine {
     amp.connect(dest);
     src.start(when);
     src.stop(when + dur + 0.02);
-    src.onended = () => amp.disconnect();
+    const entry = { src, amp };
+    if (dest === this.nodes.bgm) this.activeBgmSources.add(entry);
+    src.onended = () => {
+      amp.disconnect();
+      this.activeBgmSources.delete(entry);
+    };
   }
 
   scheduleDrum(dest, drum, when, gain) {
@@ -275,7 +306,12 @@ export class AudioEngine {
       amp.connect(dest);
       osc.start(when);
       osc.stop(when + 0.2);
-      osc.onended = () => amp.disconnect();
+      const entry = { src: osc, amp };
+      if (dest === this.nodes.bgm) this.activeBgmSources.add(entry);
+      osc.onended = () => {
+        amp.disconnect();
+        this.activeBgmSources.delete(entry);
+      };
     } else if (drum === "snare") {
       this.scheduleNoise(dest, {
         when,

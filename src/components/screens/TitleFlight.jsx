@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import Logo from "../ui/Logo.jsx";
 import NightSky from "../ui/NightSky.jsx";
 import Embers from "../ui/Embers.jsx";
+import LightRays from "../ui/LightRays.jsx";
+import FilmGrain from "../ui/FilmGrain.jsx";
+import MagicDust from "../ui/MagicDust.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
 
-const FLIGHT_MS = 4600; // ロゴが遠方から着地するまで
-const IMPACT_MS = 2750; // 稲妻と閃光の瞬間
+const FLIGHT_MS = 4600; // ロゴが現れきるまで
+const REVEAL_MS = 2750; // 光の粒が寄り集まり、ロゴがほのかに輝きだす瞬間
 const CTA_MS = 5100; // ボタンが現れるまで
 
-/** 雲海の奥からタイトルロゴが飛来し、稲妻とともに着地する。 */
+/** 夜空を舞う金色の光の粒が渦を巻きながら寄り集まり、静かにタイトルの形を結ぶ。 */
 export default function TitleFlight({ onStart }) {
   const { playSfx } = useAudio();
   const [showCta, setShowCta] = useState(false);
@@ -17,9 +20,9 @@ export default function TitleFlight({ onStart }) {
     playSfx("whoosh");
     const timers = [
       setTimeout(() => {
-        playSfx("thunder");
+        playSfx("sparkle");
         playSfx("chime");
-      }, IMPACT_MS),
+      }, REVEAL_MS),
       setTimeout(() => setShowCta(true), CTA_MS),
     ];
     return () => timers.forEach(clearTimeout);
@@ -29,38 +32,23 @@ export default function TitleFlight({ onStart }) {
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ background: "#02040a" }}>
       <NightSky push />
+      <LightRays count={5} intensity={0.85} />
       <Embers count={30} />
+      <MagicDust durationMs={REVEAL_MS + 400} startMs={200} />
 
-      {/* 着地の閃光 */}
+      {/* 光の粒が収束する瞬間、画面全体がふわりと金色に満ちる */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: "#fff7e0", animation: `impactFlash ${FLIGHT_MS}ms ease-out both` }}
+        style={{
+          background: "radial-gradient(circle at 50% 46%, #fef3c7, transparent 62%)",
+          mixBlendMode: "screen",
+          animation: `impactFlash ${FLIGHT_MS}ms ease-out both`,
+        }}
       />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
         <div className="relative" style={{ width: "100%", maxWidth: 380 }}>
-          {/* 稲妻はロゴの背後で光る */}
-          <svg
-            className="absolute left-1/2 pointer-events-none"
-            width="260"
-            height="300"
-            viewBox="0 0 260 300"
-            style={{
-              top: "-46%",
-              marginLeft: -130,
-              animation: `boltStrike ${FLIGHT_MS}ms ease-out both`,
-              filter: "drop-shadow(0 0 14px #fde68a)",
-            }}
-          >
-            <path
-              d="M148 6 L96 132 L134 132 L88 294 L176 128 L136 128 L184 6 Z"
-              fill="#fef3c7"
-              opacity="0.92"
-            />
-            <path d="M148 6 L96 132 L134 132 L88 294 L176 128 L136 128 L184 6 Z" fill="none" stroke="#fff" strokeWidth="2" />
-          </svg>
-
-          {/* ロゴ本体。飛来 → 着地後はゆるく漂う */}
+          {/* ロゴ本体。淡く滲みながら像を結び、そのあとはゆるく漂う */}
           <div
             className="relative"
             style={{
@@ -69,7 +57,7 @@ export default function TitleFlight({ onStart }) {
               animation: `logoFlyIn ${FLIGHT_MS}ms cubic-bezier(.16,.72,.18,1) both, titleHold 7s ease-in-out ${FLIGHT_MS + 200}ms infinite`,
             }}
           >
-            {/* 発光コピー。着地後にグローが焼き切れて金属質が残る */}
+            {/* 発光コピー。結像後にグローが淡くなり金属質が残る */}
             <div
               className="absolute inset-0 flex justify-center pointer-events-none"
               style={{
@@ -85,7 +73,7 @@ export default function TitleFlight({ onStart }) {
             </div>
           </div>
 
-          {/* 着地の瞬間に走る光条 */}
+          {/* 像を結ぶ瞬間に走る光条 */}
           <div
             className="absolute left-0 right-0 pointer-events-none"
             style={{
@@ -96,6 +84,46 @@ export default function TitleFlight({ onStart }) {
               animation: `flareSweep ${FLIGHT_MS}ms ease-out both`,
             }}
           />
+
+          {/* 結像した中心から放射状に広がるレンズフレア */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              left: "50%",
+              top: "48%",
+              width: 260,
+              height: 260,
+              marginLeft: -130,
+              marginTop: -130,
+              mixBlendMode: "screen",
+              background: "radial-gradient(circle, rgba(255,247,224,0.95), rgba(253,230,138,0.4) 38%, transparent 72%)",
+              animation: `flareBurst ${FLIGHT_MS}ms ease-out both`,
+            }}
+          />
+          {[0, 45, 90, 135].map((deg) => (
+            <div
+              key={deg}
+              className="absolute pointer-events-none"
+              style={{
+                left: "50%",
+                top: "48%",
+                width: 300,
+                height: 2,
+                marginLeft: -150,
+                transform: `rotate(${deg}deg)`,
+                transformOrigin: "50% 50%",
+              }}
+            >
+              <div
+                className="w-full h-full"
+                style={{
+                  background: "linear-gradient(90deg,transparent,rgba(255,247,224,0.85),transparent)",
+                  mixBlendMode: "screen",
+                  animation: `flareStreak ${FLIGHT_MS}ms ease-out both`,
+                }}
+              />
+            </div>
+          ))}
         </div>
 
         <button
@@ -110,6 +138,7 @@ export default function TitleFlight({ onStart }) {
           ▶ 冒険をはじめる
         </button>
       </div>
+      <FilmGrain opacity={0.05} />
     </div>
   );
 }
