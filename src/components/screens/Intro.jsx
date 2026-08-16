@@ -19,6 +19,8 @@ export default function Intro({ onDone }) {
   const [i, setI] = useState(0);
   const scenes = STORY.scenes;
   const titleShown = i >= scenes.length;
+  const showJourneyBridge =
+    started && i >= scenes.length - 1 && Boolean(OPENING_IMAGES.journey);
 
   useEffect(() => {
     if (!started || titleShown) return undefined;
@@ -37,6 +39,7 @@ export default function Intro({ onDone }) {
   const sc = scenes[Math.min(i, scenes.length - 1)];
   const Scene = SCENES[sc.scene];
   const sceneImage = OPENING_IMAGES[sc.scene];
+  const usesJourneyBridge = sc.scene === "journey" && showJourneyBridge;
 
   function finish() {
     playSfx("start");
@@ -45,13 +48,27 @@ export default function Intro({ onDone }) {
 
   return (
     <div className="fixed inset-0 overflow-hidden" style={{ zIndex: 20, background: "#02040a" }}>
+      {showJourneyBridge && (
+        <img
+          src={OPENING_IMAGES.journey}
+          alt=""
+          className={
+            "opening-journey-bridge absolute inset-0 h-full w-full object-cover " +
+            (titleShown ? "opening-journey-bridge--title" : "opening-journey-bridge--scene")
+          }
+          style={{ "--opening-scene-duration": `${STORY.sceneDurationMs}ms` }}
+        />
+      )}
       {!started ? (
         <IntroGate onStart={() => setStarted(true)} />
       ) : !titleShown ? (
         <div
           key={i}
           className={`opening-shot opening-shot--${sc.scene} absolute inset-0`}
-          style={{ animation: "cineIn .95s cubic-bezier(.16,.84,.26,1)" }}
+          style={{
+            "--opening-scene-duration": `${STORY.sceneDurationMs}ms`,
+            animation: "cineIn .95s cubic-bezier(.16,.84,.26,1)",
+          }}
         >
           {/* シーン切り替えの一瞬だけ暗転させ、カットが切り替わる映画的な間を作る */}
           <div
@@ -59,7 +76,10 @@ export default function Intro({ onDone }) {
             className="absolute inset-0 bg-black pointer-events-none"
             style={{ zIndex: 12, animation: "shutterFlash .62s ease-out both" }}
           />
-          <div className="absolute inset-0" style={{ background: sc.tint }} />
+          <div
+            className="absolute inset-0"
+            style={{ background: usesJourneyBridge ? "transparent" : sc.tint }}
+          />
           {/* イラスト本体を画面いっぱいに敷き、ケンバーンズでゆっくり動かす */}
           <div
             className="opening-camera absolute inset-0"
@@ -67,7 +87,7 @@ export default function Intro({ onDone }) {
               animation: `${KENBURNS[i % KENBURNS.length]} ${sc.scene === "journey" ? STORY.sceneDurationMs : STORY.sceneDurationMs + 900}ms cubic-bezier(.2,.65,.3,1) forwards`,
             }}
           >
-            {sceneImage ? (
+            {sceneImage && !usesJourneyBridge ? (
               <img
                 src={sceneImage}
                 alt=""
@@ -94,20 +114,42 @@ export default function Intro({ onDone }) {
           <div
             className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(180deg,rgba(0,0,0,.12) 0%,transparent 42%,rgba(0,0,0,.72) 100%), radial-gradient(circle at 50% 42%, transparent 30%, rgba(0,0,0,0.58))",
+              background: usesJourneyBridge
+                ? "radial-gradient(circle at 50% 45%, rgba(2,4,10,.08), #02040a 82%)"
+                : "linear-gradient(180deg,rgba(0,0,0,.12) 0%,transparent 42%,rgba(0,0,0,.72) 100%), radial-gradient(circle at 50% 42%, transparent 30%, rgba(0,0,0,0.58))",
             }}
           />
-          <div className="absolute inset-x-0 px-8 text-center" style={{ top: "68%", zIndex: 15 }}>
+          <div
+            className="absolute inset-x-0 px-5 text-center sm:px-8"
+            style={{
+              top: "66%",
+              zIndex: 15,
+              animation: usesJourneyBridge
+                ? `openingUiOut .65s ease-in ${STORY.sceneDurationMs - 650}ms both`
+                : undefined,
+            }}
+          >
             <p
               key={`cap${i}`}
-              className="text-slate-100 text-lg leading-relaxed font-serif"
-              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9)", animation: "captionIn 1.1s ease-out .35s both" }}
+              className="mx-auto max-w-3xl font-serif text-xl font-semibold leading-relaxed text-slate-100 sm:text-2xl"
+              style={{
+                textShadow: "0 2px 14px rgba(0,0,0,0.95)",
+                animation: "captionIn 1.1s ease-out .3s both",
+              }}
             >
               {sc.caption}
             </p>
           </div>
-          <div className="absolute inset-x-0 flex justify-center gap-2" style={{ bottom: "9%", zIndex: 15 }}>
+          <div
+            className="absolute inset-x-0 flex justify-center gap-2"
+            style={{
+              bottom: "9%",
+              zIndex: 15,
+              animation: usesJourneyBridge
+                ? `openingUiOut .55s ease-in ${STORY.sceneDurationMs - 550}ms both`
+                : undefined,
+            }}
+          >
             {scenes.map((_, k) => (
               <span
                 key={k}
@@ -118,7 +160,7 @@ export default function Intro({ onDone }) {
           <FilmGrain opacity={sceneImage ? 0.022 : 0.045} />
         </div>
       ) : (
-        <TitleFlight onStart={finish} />
+        <TitleFlight onStart={finish} sharedJourneyBackground={showJourneyBridge} />
       )}
 
       {/* ティール&オレンジ寄りのカラーグレード。シーンをまたいでも一貫した「映像」の質感を保つ */}

@@ -13,7 +13,7 @@ const REVEAL_MS = 2750; // 光の粒が寄り集まり、ロゴがほのかに�
 const CTA_MS = 5100; // ボタンが現れるまで
 
 /** 夜空を舞う金色の光の粒が渦を巻きながら寄り集まり、静かにタイトルの形を結ぶ。 */
-export default function TitleFlight({ onStart }) {
+export default function TitleFlight({ onStart, sharedJourneyBackground = false }) {
   const { playSfx } = useAudio();
   const [showCta, setShowCta] = useState(false);
 
@@ -31,16 +31,21 @@ export default function TitleFlight({ onStart }) {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ background: "#02040a" }}>
+    <div
+      className="absolute inset-0 overflow-hidden"
+      style={{ background: sharedJourneyBackground ? "transparent" : "#02040a" }}
+    >
       {OPENING_IMAGES.journey ? (
         <>
-          <img
-            src={OPENING_IMAGES.journey}
-            alt=""
-            className="title-journey-bg absolute inset-0 h-full w-full object-cover"
-          />
+          {!sharedJourneyBackground && (
+            <img
+              src={OPENING_IMAGES.journey}
+              alt=""
+              className="title-journey-bg absolute inset-0 h-full w-full object-cover"
+            />
+          )}
           <div
-            className="absolute inset-0"
+            className="title-journey-shade absolute inset-0"
             style={{ background: "radial-gradient(circle at 50% 45%, rgba(2,4,10,.08), #02040a 82%)" }}
           />
         </>
