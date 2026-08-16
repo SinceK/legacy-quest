@@ -10,22 +10,26 @@ export default function Home({ chapters, completed, onStart, onReset, hasSave })
   const nextIdx = nextChapterIndex(chapters, completed);
 
   return (
-    <div>
-      <div className="flex flex-col items-center mb-5" style={{ animation: "titlePop .6s ease-out" }}>
+    <div className="pb-6">
+      <div className="flex flex-col items-center mb-4" style={{ animation: "titlePop .6s ease-out" }}>
         <Logo scale={0.82} />
       </div>
 
       <div
-        className="rounded-xl border border-emerald-800 bg-emerald-950 p-3 mb-5 flex gap-3 items-start"
+        className="rpg-panel rounded-2xl p-4 mb-5 flex gap-3 items-center"
         style={{ animation: "fadeUp .5s ease-out .3s both" }}
       >
         <div className="shrink-0">
           <Sage size={44} />
         </div>
-        <p className="text-sm text-emerald-100 leading-relaxed">{SAGE_LINES.home}</p>
+        <div>
+          <div className="text-[10px] font-black tracking-[.24em] text-amber-300 mb-1">GUIDE</div>
+          <p className="text-sm text-emerald-50 leading-relaxed">{SAGE_LINES.home}</p>
+        </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="relative space-y-3">
+        <div className="absolute left-[35px] top-8 bottom-8 w-px bg-gradient-to-b from-amber-300 via-emerald-400 to-violet-400 opacity-50" />
         {chapters.map((c, i) => {
           const cleared = completed.includes(c.id);
           const unlocked = isUnlocked(chapters, i, completed);
@@ -39,28 +43,30 @@ export default function Home({ chapters, completed, onStart, onReset, hasSave })
                 onStart(i);
               }}
               className={
-                "w-full flex items-center gap-3 rounded-xl border p-3 text-left transition-colors " +
+                "quest-card w-full flex items-center gap-3 rounded-2xl p-3.5 text-left transition-all " +
                 (unlocked
-                  ? "border-slate-600 bg-slate-800 hover:border-amber-400 hover:bg-slate-700"
-                  : "border-slate-800 bg-slate-900 opacity-60")
+                  ? isNext
+                    ? "quest-card--next"
+                    : ""
+                  : "opacity-55 grayscale")
               }
               style={{ animation: `fadeUp .45s ease-out ${0.45 + i * 0.12}s both` }}
             >
               <div
-                className="w-14 h-14 shrink-0 flex items-center justify-center"
+                className="relative z-10 w-16 h-16 shrink-0 flex items-center justify-center rounded-2xl bg-slate-950/50 border border-white/10"
                 style={isNext ? { animation: "ctaPulse 1.8s ease-in-out infinite", borderRadius: 12 } : undefined}
               >
-                {unlocked ? <Monster cfg={c.monster} defeated={cleared} size={56} /> : <span className="text-3xl">🔒</span>}
+                {unlocked ? <Monster cfg={c.monster} defeated={cleared} size={62} /> : <span className="text-3xl">🔒</span>}
               </div>
               <div className="flex-1">
-                <div className="text-xs text-slate-400 font-mono">
+                <div className="text-[10px] text-amber-300 font-black tracking-wider">
                   {c.no}・{SKILLS[c.skill].label}
                 </div>
-                <div className="font-bold text-slate-100">{c.title}</div>
-                <div className="text-xs text-slate-500">{unlocked ? c.monster.name : c.dungeon}</div>
+                <div className="font-black text-slate-50 text-lg leading-tight">{c.title}</div>
+                <div className="text-xs text-slate-300 mt-1">{unlocked ? `${c.dungeon}・${c.monster.name}` : c.dungeon}</div>
               </div>
               {cleared ? (
-                <span className="text-emerald-400 text-sm font-bold">✓ 撃破</span>
+                <span className="rounded-full border border-emerald-400/50 bg-emerald-400/15 px-2 py-1 text-emerald-300 text-xs font-black">✓ CLEAR</span>
               ) : isNext ? (
                 <span className="text-amber-300 text-sm font-bold" style={{ animation: "floatY 1.6s ease-in-out infinite" }}>
                   ▶

@@ -40,7 +40,7 @@ export default function ChoiceQuestion({ q, onResult, onNext }) {
       )}
       <div className="grid gap-2">
         {q.options.map((opt, i) => {
-          let cls = "w-full text-left px-4 py-3 rounded-lg border transition-colors font-mono text-sm ";
+          let cls = "answer-card w-full text-left px-4 py-3 rounded-xl border transition-colors font-mono text-sm ";
           if (!submitted) cls += "border-slate-600 bg-slate-800 text-slate-100 hover:border-amber-400 hover:bg-slate-700";
           else if (i === q.answer) cls += "border-emerald-400 bg-emerald-900 text-emerald-100";
           else if (i === picked) cls += "border-rose-400 bg-rose-900 text-rose-100";

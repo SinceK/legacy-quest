@@ -37,7 +37,7 @@ export default function OrderingQuestion({ q, onResult, onNext }) {
               onClick={() => pick(it.orig)}
               disabled={chosen || submitted}
               className={
-                "w-full text-left px-4 py-3 rounded-lg border font-mono text-sm flex items-center gap-3 " +
+                "answer-card w-full text-left px-4 py-3 rounded-xl border font-mono text-sm flex items-center gap-3 " +
                 (chosen
                   ? submitted
                     ? okPos
@@ -80,7 +80,7 @@ export default function OrderingQuestion({ q, onResult, onNext }) {
             onClick={check}
             disabled={!done}
             className={
-              "flex-1 py-3 rounded-lg font-bold " +
+              "rpg-button flex-1 py-3 rounded-xl font-bold " +
               (done ? "bg-amber-400 text-slate-900 hover:bg-amber-300" : "bg-slate-700 text-slate-500")
             }
           >

@@ -92,17 +92,18 @@ export default function Stage({ chapter, onScore, onComplete, onHome }) {
 
       <div
         key={`shake${fx.key}`}
-        className="rounded-xl border border-slate-700 bg-slate-900 p-3 mb-4 relative overflow-hidden"
+        className="battle-arena rounded-3xl p-4 mb-4 relative overflow-hidden"
         style={{ animation: shakeAnim }}
       >
-        <div key={`punch${fx.key}`} style={{ animation: punchAnim }}>
+        <div className="battle-aura" style={{ background: `radial-gradient(circle, ${chapter.monster.accent}4d, transparent 68%)` }} />
+        <div className="relative" key={`punch${fx.key}`} style={{ animation: punchAnim }}>
           <div className="flex justify-between items-center mb-1">
-            <span className="text-sm font-bold text-slate-100">{chapter.monster.name}</span>
+            <span className="boss-nameplate">BOSS・{chapter.monster.name}</span>
             <span className="text-xs font-mono text-slate-400">
               {chapter.no}・{chapter.dungeon}
             </span>
           </div>
-          <div className="relative h-2.5 rounded-full bg-slate-700 overflow-hidden mb-3">
+          <div className="hp-frame relative h-4 rounded-full bg-slate-950/80 overflow-hidden mb-3 p-[3px]">
             <div className="absolute inset-y-0 left-0 rounded-full bg-amber-300" style={{ width: `${hpPct}%`, transition: "width .7s ease .25s" }} />
             <div className="absolute inset-y-0 left-0 rounded-full bg-rose-500" style={{ width: `${hpPct}%`, transition: "width .18s ease" }} />
           </div>
@@ -111,7 +112,7 @@ export default function Stage({ chapter, onScore, onComplete, onHome }) {
               key={`mon${fx.key}`}
               style={fx.key > 0 && !defeated ? { animation: "knockback .45s ease-out, hardFlash .5s ease-out" } : undefined}
             >
-              <Monster cfg={chapter.monster} defeated={defeated} size={124} />
+              <Monster cfg={chapter.monster} defeated={defeated} size={142} />
             </div>
             <Impact fx={fx} />
             {combo >= 2 && !defeated && (
@@ -143,19 +144,20 @@ export default function Stage({ chapter, onScore, onComplete, onHome }) {
         </div>
       </div>
 
-      <div className="mb-4">
-        <CobolPanel code={chapter.cobol} />
-      </div>
+      <div className="question-shell rounded-3xl p-4">
+        <div className="mb-4">
+          <CobolPanel code={chapter.cobol} />
+        </div>
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-xs text-slate-400 font-mono">
+            問 {qi + 1} / {total}
+          </span>
+          <span className="text-xs text-amber-300 font-mono">＋{q.xp} XP</span>
+        </div>
+        <h2 className="font-bold text-slate-100 mb-3">{q.prompt}</h2>
 
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-xs text-slate-400 font-mono">
-          問 {qi + 1} / {total}
-        </span>
-        <span className="text-xs text-amber-300 font-mono">＋{q.xp} XP</span>
+        <QuestionView q={q} onResult={result} onNext={next} />
       </div>
-      <h2 className="font-bold text-slate-100 mb-3">{q.prompt}</h2>
-
-      <QuestionView q={q} onResult={result} onNext={next} />
     </div>
   );
 }

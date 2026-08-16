@@ -6,6 +6,7 @@ import { useAudio, useBgm } from "./audio/AudioProvider.jsx";
 
 import CodeRain from "./components/ui/CodeRain.jsx";
 import AudioToggle from "./components/ui/AudioToggle.jsx";
+import GameBackdrop from "./components/ui/GameBackdrop.jsx";
 import Hud from "./components/screens/Hud.jsx";
 import Intro from "./components/screens/Intro.jsx";
 import Home from "./components/screens/Home.jsx";
@@ -77,12 +78,17 @@ export default function App() {
   }
 
   const allCleared = progress.completed.length === CHAPTERS.length;
+  const activeChapter = CHAPTERS[current];
+  const backdropScene =
+    screen === "stage"
+      ? `battle-${activeChapter.id}`
+      : screen === "victory"
+        ? "victory"
+        : "map";
 
   return (
-    <div
-      className="min-h-screen w-full py-6 px-4 relative"
-      style={{ background: "radial-gradient(1100px 500px at 50% -8%, #1e1b4b, #0b1020 55%, #070a12)" }}
-    >
+    <div className="game-shell min-h-screen w-full py-5 px-3 sm:px-5 relative">
+      {screen !== "intro" && <GameBackdrop scene={backdropScene} accent={activeChapter?.monster.accent} />}
       {screen === "home" && <CodeRain />}
       {screen === "intro" && (
         <Intro
@@ -95,18 +101,16 @@ export default function App() {
 
       {levelUp && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 50 }}>
-          <div
-            className="rounded-2xl bg-amber-400 text-slate-900 px-8 py-5 text-center"
-            style={{ animation: "popIn .4s, glowPulse 1.6s ease-in-out" }}
-          >
-            <div className="text-2xl font-black">LEVEL UP!</div>
+          <div className="level-up-card px-10 py-7 text-center">
+            <div className="level-up-rays" />
+            <div className="relative text-3xl font-black">LEVEL UP!</div>
             <div className="font-mono font-bold">Lv{levelUp} になった！</div>
           </div>
         </div>
       )}
 
       {screen !== "intro" && (
-        <div className="max-w-md mx-auto relative" style={{ zIndex: 10 }}>
+        <div className="max-w-xl mx-auto relative" style={{ zIndex: 10 }}>
           <div className="flex justify-end mb-2">
             <AudioToggle />
           </div>

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import CodeRain from "../ui/CodeRain.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
+import { GAME_IMAGES } from "../../content/gameImages.js";
 
 /** 章開始のダイブ演出。章表示 → ポータル → ズームイン。 */
 export default function BattleIntro({ chapter, onDone }) {
@@ -16,23 +17,24 @@ export default function BattleIntro({ chapter, onDone }) {
 
   return (
     <div className="fixed inset-0 overflow-hidden" style={{ zIndex: 30, background: "#04060d" }} onClick={onDone}>
-      <CodeRain heavy fast />
+      <img className="absolute inset-0 h-full w-full object-cover opacity-70" src={GAME_IMAGES[`battle-${chapter.id}`]} alt="" />
+      <div className="absolute inset-0 bg-slate-950/55" />
+      <CodeRain fast />
       <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 50% 58%, ${m.accent}33, transparent 60%)` }} />
       <div className="absolute inset-0" style={{ animation: "diveZoom 1s ease-in 2.2s both" }}>
         <div className="absolute inset-x-0 text-center px-6" style={{ top: "22%" }}>
-          <div
-            className="font-black text-amber-300"
+          <div className="inline-block rounded-full border border-amber-200/50 bg-slate-950/70 px-5 py-1 font-black text-amber-300"
             style={{ fontSize: 40, textShadow: "0 0 22px rgba(251,191,36,.6)", animation: "dropIn .7s ease-out both" }}
           >
             {chapter.no}
           </div>
-          <div className="font-black text-slate-100 mt-1" style={{ fontSize: 24, animation: "fadeUp .6s ease-out .45s both" }}>
+          <div className="font-black text-white mt-3" style={{ fontSize: 28, textShadow: "0 3px 16px #000", animation: "fadeUp .6s ease-out .45s both" }}>
             {chapter.title}
           </div>
         </div>
 
         <div className="absolute" style={{ left: "50%", top: "60%", animation: "portalIn .9s ease-out 1.1s both" }}>
-          <div className="relative" style={{ width: 180, height: 180, marginLeft: -90, marginTop: -90 }}>
+            <div className="relative" style={{ width: 210, height: 210, marginLeft: -105, marginTop: -105 }}>
             <div
               className="absolute inset-0 rounded-full"
               style={{

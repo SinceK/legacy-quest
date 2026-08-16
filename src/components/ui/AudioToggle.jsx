@@ -8,7 +8,7 @@ function Chip({ active, label, title, onClick }) {
       title={title}
       aria-pressed={active}
       className={
-        "px-2 py-1 rounded-md border text-[11px] font-mono transition-colors " +
+        "backdrop-blur-md px-2 py-1 rounded-full border text-[11px] font-mono transition-colors " +
         (active
           ? "border-emerald-500 bg-emerald-950 text-emerald-300"
           : "border-slate-700 bg-slate-900 text-slate-500")
