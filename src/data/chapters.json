@@ -199,6 +199,146 @@
         ],
         "migrationTip": "判別値と各REDEFINESレイアウトの対応を表にし、Javaでは判別後に適切な型へ変換して不正な組み合わせを表現しにくくする。",
         "xp": 25
+      },
+      {
+        "id": "ch1-q10",
+        "type": "matching",
+        "topic": "DIVISION",
+        "difficulty": "beginner",
+        "prompt": "COBOLの4つのDIVISIONと主な役割を対応づけよ",
+        "pairs": [
+          { "left": "IDENTIFICATION DIVISION", "right": "プログラム名などを記述" },
+          { "left": "ENVIRONMENT DIVISION", "right": "実行環境やファイルの対応を記述" },
+          { "left": "DATA DIVISION", "right": "扱うデータの構造を記述" },
+          { "left": "PROCEDURE DIVISION", "right": "実行する処理を記述" }
+        ],
+        "explanation": "COBOLプログラムはIDENTIFICATION、ENVIRONMENT、DATA、PROCEDUREの4つのDIVISIONで構成され、それぞれ識別情報、環境、データ、処理という役割を持つ。",
+        "wrongReason": "DIVISION名を暗記するだけでなく、プログラムの識別、外部環境、データ定義、実行処理のどれを担当するかで整理する。",
+        "migrationTip": "Java移行ではDATA DIVISIONをDTOや型定義、PROCEDURE DIVISIONをサービス処理、ENVIRONMENT DIVISIONの入出力設定を外部設定として読み替える。",
+        "xp": 15
+      },
+      {
+        "id": "ch1-q11",
+        "type": "choice",
+        "topic": "DIVISION",
+        "difficulty": "beginner",
+        "prompt": "MOVE、IF、PERFORMなどの実行文を主に記述するDIVISIONは？",
+        "options": ["PROCEDURE DIVISION", "DATA DIVISION", "ENVIRONMENT DIVISION", "IDENTIFICATION DIVISION"],
+        "answer": 0,
+        "explanation": "実際にデータを加工し、条件分岐や繰り返しを行う処理はPROCEDURE DIVISIONへ記述する。DATA DIVISIONは処理対象となるデータを定義する。",
+        "wrongReasons": [
+          null,
+          "DATA DIVISIONはデータ項目やレコード構造を定義する場所であり、実行文の中心ではない。",
+          "ENVIRONMENT DIVISIONは実行環境やファイルと外部装置の対応などを記述する。",
+          "IDENTIFICATION DIVISIONはPROGRAM-IDなど、プログラムの識別情報を記述する。"
+        ],
+        "migrationTip": "PROCEDURE DIVISIONの段落をそのままJavaメソッドへ機械分割せず、業務責務と入出力を見てクラスやサービスの境界を決める。",
+        "xp": 10
+      },
+      {
+        "id": "ch1-q12",
+        "type": "matching",
+        "topic": "SECTION",
+        "difficulty": "beginner",
+        "prompt": "DATA DIVISION内のSECTIONと役割を対応づけよ",
+        "pairs": [
+          { "left": "FILE SECTION", "right": "ファイルのレコード構造" },
+          { "left": "WORKING-STORAGE SECTION", "right": "プログラムが保持する作業用データ" },
+          { "left": "LOCAL-STORAGE SECTION", "right": "呼び出しごとに割り当てるデータ" },
+          { "left": "LINKAGE SECTION", "right": "呼出元など外部にあるデータの記述" }
+        ],
+        "explanation": "DATA DIVISIONは用途別のSECTIONに分かれる。FILEはファイルレコード、WORKING-STORAGEは作業領域、LOCAL-STORAGEは呼び出し単位の領域、LINKAGEはプログラム外に実体がある受渡データを記述する。",
+        "wrongReason": "SECTIONごとにデータの寿命と所有者が異なる。ファイル、プログラム保持、呼び出し単位、外部受渡しの4分類で考える。",
+        "migrationTip": "Javaでは各項目の寿命を確認し、ローカル変数、インスタンス変数、引数、ファイルDTOへ分ける。WORKING-STORAGEを安易にstaticへ移さない。",
+        "xp": 15
+      },
+      {
+        "id": "ch1-q13",
+        "type": "choice",
+        "topic": "SECTION・段落",
+        "difficulty": "beginner",
+        "prompt": "PROCEDURE DIVISION内のSECTIONと段落（paragraph）の関係として正しいものは？",
+        "options": [
+          "SECTIONは複数の段落をまとめることができ、PERFORMの対象にもできる",
+          "段落は必ず複数のSECTIONを含む",
+          "SECTIONはDATA DIVISIONでだけ使用できる",
+          "段落名は外部プログラムを動的リンクする命令である"
+        ],
+        "answer": 0,
+        "explanation": "PROCEDURE DIVISIONでは、SECTIONの中に段落をまとめられる。SECTIONや段落には処理名を付け、PERFORMで内部ルーチンのように実行できる。",
+        "wrongReasons": [
+          null,
+          "包含関係が逆で、SECTIONが一つ以上の段落をまとめる構造を取れる。",
+          "SECTIONはDATA DIVISIONだけでなく、PROCEDURE DIVISIONで処理をまとめるためにも使われる。",
+          "段落名はプログラム内の処理範囲を識別する名前であり、外部プログラムのリンク命令ではない。"
+        ],
+        "migrationTip": "SECTIONや段落の呼出関係をグラフ化し、複数箇所から参照される処理と順次実行に依存する処理を分けてからJavaメソッドへ再構成する。",
+        "xp": 10
+      },
+      {
+        "id": "ch1-q14",
+        "type": "choice",
+        "topic": "ルーチン",
+        "difficulty": "beginner",
+        "prompt": "PERFORM CALC-TAX と CALL 'CALC-TAX' の基本的な違いは？",
+        "options": [
+          "PERFORMは同じプログラム内の段落・SECTIONを実行し、CALLは別プログラムや外部ルーチンを呼ぶ",
+          "PERFORMはファイルを開き、CALLはファイルを閉じる",
+          "PERFORMはデータ定義を展開し、CALLはCOPY句を置換する",
+          "両方とも常に同じ処理になり、使い分けはない"
+        ],
+        "answer": 0,
+        "explanation": "外部指定のPERFORMは同一PROCEDURE DIVISION内の段落やSECTIONを実行する。一方、CALLは副プログラムやLanguage Environment対応の外部ルーチンへ制御を渡す。",
+        "wrongReasons": [
+          null,
+          "ファイルの開閉はOPEN／CLOSEで行い、PERFORMとCALLの違いではない。",
+          "ソース定義の展開はCOPYの役割。PERFORMとCALLは実行時の制御に関わる。",
+          "内部処理の実行と外部ルーチン呼び出しでは、引数、状態、リンク方法が異なる。"
+        ],
+        "migrationTip": "PERFORM先はJavaのprivateメソッド候補、CALL先は別サービスやライブラリ境界の候補だが、共有状態と副作用を確認してから決める。",
+        "xp": 10
+      },
+      {
+        "id": "ch1-q15",
+        "type": "choice",
+        "topic": "FD・ファイル定義",
+        "difficulty": "beginner",
+        "prompt": "FILE SECTIONにあるFD（File Description）エントリーの主な役割は？",
+        "options": [
+          "ファイルの物理的な属性と、関連するレコード記述を定義する",
+          "ファイルを実際にOPENして読み込みを開始する",
+          "JCLをCOBOLプログラム内へコピーする",
+          "レコードをJavaオブジェクトへ自動変換する"
+        ],
+        "answer": 0,
+        "explanation": "FDはFILE SECTIONでファイルの物理構造や識別、関連するレコード名などを記述する。その後の01レベル以下で論理レコードの項目構造を定義する。",
+        "wrongReasons": [
+          null,
+          "FDは定義であり、実行時にファイルを開く処理はPROCEDURE DIVISIONのOPEN文で行う。",
+          "JCLを取り込む機能ではない。実際のデータセットとの対応はENVIRONMENT DIVISIONや実行環境も関係する。",
+          "FDはCOBOLのレコード記述であり、Javaオブジェクトへの変換処理までは行わない。"
+        ],
+        "migrationTip": "FD、SELECT／ASSIGN、JCLのDD、実ファイルを一組で追跡し、レコード長・可変長条件・ブロック・文字コードをJava側の入出力仕様へ移す。",
+        "xp": 10
+      },
+      {
+        "id": "ch1-q16",
+        "type": "choice",
+        "topic": "FD・ファイル定義",
+        "difficulty": "beginner",
+        "code": "FILE SECTION.\nFD  SALES-FILE\n    RECORD CONTAINS 15 CHARACTERS.\n01  SALES-REC.\n    05 ITEM-CODE  PIC X(5).\n    05 QTY        PIC 9(3).\n    05 AMOUNT     PIC 9(7).",
+        "prompt": "このFDに関連するSALES-RECの論理レコード長は？",
+        "options": ["15バイト", "3バイト", "5バイト", "45バイト"],
+        "answer": 0,
+        "explanation": "DISPLAY形式ではPIC XとPIC 9の各桁が1バイトなので、ITEM-CODE 5バイト＋QTY 3バイト＋AMOUNT 7バイト＝15バイト。RECORD CONTAINSの指定とも一致する。",
+        "wrongReasons": [
+          null,
+          "3は項目数であり、レコード長ではない。各PICの桁数を合計する。",
+          "5はITEM-CODEだけの長さで、QTYとAMOUNTも同じレコードに含まれる。",
+          "項目数と桁数を掛けるのではなく、各項目の実際のバイト長を足し合わせる。"
+        ],
+        "migrationTip": "FDの宣言値だけを信用せず、全項目のUSAGE、OCCURS、REDEFINESを含めて実長を計算し、サンプルファイルのレコード長と照合する。",
+        "xp": 15
       }
     ]
   },
@@ -295,6 +435,170 @@
         ],
         "migrationTip": "BY REFERENCE・BY CONTENT・BY VALUE、LINKAGE SECTION、RETURNING、呼出先の再入可能性を棚卸しする。",
         "xp": 20
+      },
+      {
+        "id": "ch2-q5",
+        "type": "choice",
+        "topic": "C言語連携",
+        "difficulty": "beginner",
+        "prompt": "IBM Enterprise COBOLからC言語で作られたルーチンを利用できる？",
+        "options": [
+          "Language Environmentに準拠したCルーチンなら、CALLで呼び出して言語間連携できる",
+          "COBOLから呼べるのはCOBOLで作られた副プログラムだけである",
+          "CのソースコードをCOPY句で取り込めば、そのまま実行できる",
+          "JCLからCプログラムを別ジョブで起動する方法しかない"
+        ],
+        "answer": 0,
+        "explanation": "z/OS Language Environmentは、Enterprise COBOLとC/C++などの対応言語間の呼び出しを支援する。COBOL側はCALLを使えるが、呼び出し規約、引数の渡し方、データ型、リンク方法をC側と一致させる必要がある。",
+        "wrongReasons": [
+          null,
+          "Language Environmentに準拠した他言語ルーチンとの相互呼び出しがサポートされている。",
+          "COPY句はCOBOLソースを展開する仕組みであり、Cソースをコンパイルして実行する機能ではない。",
+          "別ジョブに分けなくても、正しい言語間インターフェースを定義すればCOBOLのCALLからCルーチンを呼べる。"
+        ],
+        "migrationTip": "CライブラリへのCALLを見つけたら、関数プロトタイプ、ビルド・リンク設定、31/64ビット、引数の所有権まで依存関係として棚卸しする。",
+        "xp": 15
+      },
+      {
+        "id": "ch2-q6",
+        "type": "choice",
+        "topic": "C言語連携",
+        "difficulty": "intermediate",
+        "code": "C側の関数:\nint CADD(int a, int b);\n\nCOBOL側:\n01  WS-A       PIC S9(9) COMP-5 VALUE 10.\n01  WS-B       PIC S9(9) COMP-5 VALUE 20.\n01  WS-RESULT  PIC S9(9) COMP-5.\n\nCALL \"CADD\" USING BY VALUE WS-A WS-B\n    RETURNING WS-RESULT.",
+        "prompt": "このCALLでBY VALUEとRETURNINGを使う理由は？",
+        "options": [
+          "Cのint引数を値で直接渡し、C関数の戻り値をWS-RESULTで受け取るため",
+          "WS-AとWS-Bのアドレスを渡し、C側で必ず元の値を書き換えるため",
+          "CADDのソースコードを実行時にCOBOLへ展開するため",
+          "Cの戻り値をCOBOLのRETURN-CODEへ自動的に文字列変換するため"
+        ],
+        "answer": 0,
+        "explanation": "COBOLのBY VALUEは値をパラメータリストへ直接渡し、通常のCの値引数に対応する。RETURNINGはC関数などが返す関数値を指定したCOBOL項目で受け取る。",
+        "wrongReasons": [
+          null,
+          "アドレスを渡して元データの変更を許すのはBY REFERENCE。BY VALUEでは呼び出し先の変更が呼び出し元へ反映されない。",
+          "CALLはコンパイル・リンクされた外部ルーチンへ制御を渡す。ソース展開を行う機能ではない。",
+          "RETURNINGは指定した受け取り項目へ関数値を返す。RETURN-CODEへの文字列変換ではない。"
+        ],
+        "migrationTip": "Javaへ置き換える前に、C関数の宣言とCOBOL側のCALLを突き合わせ、値渡し・参照渡し・戻り値・エラー通知をインターフェース仕様として固定する。",
+        "xp": 20
+      },
+      {
+        "id": "ch2-q7",
+        "type": "matching",
+        "topic": "C言語連携",
+        "difficulty": "practical",
+        "prompt": "Cの型と、値渡しで対応するCOBOLの代表的な型を対応づけよ",
+        "pairs": [
+          { "left": "C: signed int", "right": "COBOL: PIC S9(9) COMP-5" },
+          { "left": "C: float", "right": "COBOL: COMP-1" },
+          { "left": "C: double", "right": "COBOL: COMP-2" },
+          { "left": "C: pointer", "right": "COBOL: USAGE POINTER" }
+        ],
+        "explanation": "言語間連携では意味が似ている型名ではなく、実際の表現と受け渡し規約を一致させる。Cのsigned intにはPIC S9(9) COMP-5、floatにはCOMP-1、doubleにはCOMP-2、ポインターにはUSAGE POINTERが代表的に対応する。",
+        "wrongReason": "CとCOBOLでは型名が異なるため、整数の符号と幅、浮動小数点形式、ポインターか実値かを一つずつ対応させる必要がある。",
+        "migrationTip": "実案件では型対応に加え、LP(32/64)、構造体の配置、文字列終端、EBCDIC／ASCII、NULL、配列長、メモリ解放責任も境界テストへ含める。",
+        "xp": 25
+      },
+      {
+        "id": "ch2-q8",
+        "type": "matching",
+        "topic": "Pro*C・Pro*COBOL",
+        "difficulty": "beginner",
+        "prompt": "Oracleプリコンパイラ関連の用語と役割を対応づけよ",
+        "pairs": [
+          { "left": "Pro*C/C++", "right": "C/C++へSQLを埋め込む" },
+          { "left": "Pro*COBOL", "right": "COBOLへSQLを埋め込む" },
+          { "left": "プリコンパイラ", "right": "埋込みSQLをランタイム呼出しへ変換" },
+          { "left": "ホスト変数", "right": "プログラムとDBの間で値を受け渡す" }
+        ],
+        "explanation": "Pro*C/C++とPro*COBOLは、それぞれC/C++とCOBOLをホスト言語としてOracle SQLを埋め込むためのプリコンパイラ製品。プリコンパイルによってEXEC SQL文がOracleランタイムライブラリの呼び出しを含むソースへ変換される。",
+        "wrongReason": "Pro*C/C++とPro*COBOLの違いはホスト言語であり、どちらも埋込みSQLをプリコンパイルしてOracleへアクセスする。",
+        "migrationTip": "資産名だけで判断せず、ソース拡張子、プリコンパイル手順、設定ファイル、生成物、リンクするOracleライブラリをビルドジョブから確認する。",
+        "xp": 15
+      },
+      {
+        "id": "ch2-q9",
+        "type": "choice",
+        "topic": "Pro*C・Pro*COBOL",
+        "difficulty": "beginner",
+        "code": "WORKING-STORAGE SECTION.\n01  WS-EMPNO  PIC S9(4) COMP.\n01  WS-ENAME  PIC X(10).\n\nPROCEDURE DIVISION.\n    EXEC SQL\n        SELECT ENAME INTO :WS-ENAME\n          FROM EMP\n         WHERE EMPNO = :WS-EMPNO\n    END-EXEC.",
+        "prompt": "Pro*COBOLのSQL内で、WS-ENAMEとWS-EMPNOの先頭に「:」を付ける理由は？",
+        "options": [
+          "COBOL側のホスト変数としてSQLとの値の受け渡しに使うことを示すため",
+          "Oracleの表名であることを示すため",
+          "SQL文をコメントアウトするため",
+          "文字列をEBCDICへ自動変換するため"
+        ],
+        "answer": 0,
+        "explanation": "埋込みSQLでは、ホスト言語側の変数をコロン付きで参照する。INTOのWS-ENAMEはDBからの出力、WHEREのWS-EMPNOはDBへ渡す入力ホスト変数である。",
+        "wrongReasons": [
+          null,
+          "表名や列名にはコロンを付けない。コロンはホスト言語側の変数を識別する。",
+          "コメントではなく、SQLとCOBOL間で値を受け渡すための構文である。",
+          "コロン自体に文字コード変換機能はない。文字コードや長さは別途確認が必要である。"
+        ],
+        "migrationTip": "Java移行では各ホスト変数について、入出力方向、COBOL型、DB列型、NULL可否、文字長を一覧化し、JDBCのバインド値と結果マッピングへ対応させる。",
+        "xp": 15
+      },
+      {
+        "id": "ch2-q10",
+        "type": "ordering",
+        "topic": "Pro*C・Pro*COBOL",
+        "difficulty": "beginner",
+        "prompt": "埋込みSQLプログラムを実行可能にする基本的な流れを並べよ",
+        "items": [
+          "Pro*CまたはPro*COBOLでプリコンパイルする",
+          "生成されたCまたはCOBOLソースを通常のコンパイラでコンパイルする",
+          "オブジェクトをOracleランタイムライブラリなどとリンクする",
+          "生成された実行プログラムを起動する"
+        ],
+        "explanation": "埋込みSQLはネイティブコンパイラが直接処理する前にプリコンパイルする。生成ソースをコンパイルし、SQLLIBなど必要なOracleライブラリとリンクしてから実行する。",
+        "wrongReason": "プリコンパイル前のEXEC SQLを通常のC／COBOLコンパイラへ直接渡しても、Oracleアクセス用の呼び出しへ変換されていない。",
+        "migrationTip": "移行時はソースだけでなく、プリコンパイルオプション、インクルード／COPY、生成ファイル、コンパイル、リンクの順序をCI/CDへ再現する。",
+        "xp": 15
+      },
+      {
+        "id": "ch2-q11",
+        "type": "choice",
+        "topic": "Pro*C・Pro*COBOL",
+        "difficulty": "intermediate",
+        "code": "01  WS-COMM      PIC S9(5)V99 COMP-3.\n01  WS-COMM-IND  PIC S9(4) COMP.\n\nEXEC SQL\n    SELECT COMM\n      INTO :WS-COMM INDICATOR :WS-COMM-IND\n      FROM EMP\n     WHERE EMPNO = :WS-EMPNO\nEND-EXEC.",
+        "prompt": "COMM列がNULLだった場合、一般にWS-COMM-INDへ設定される値は？",
+        "options": ["-1", "0", "1", "NULLという文字列"],
+        "answer": 0,
+        "explanation": "Oracleプリコンパイラのインジケータ変数では、-1がNULLを表す。0は正常な非NULL値、正値は文字出力の切り捨てなどを示す場合がある。",
+        "wrongReasons": [
+          null,
+          "0は通常、対象値がNULLではなく操作が成功したことを示す。",
+          "正値はNULLではなく、文字データが切り捨てられた場合の元の長さなどを示す。",
+          "インジケータ変数は数値項目であり、NULLという文字列は設定されない。"
+        ],
+        "migrationTip": "JavaではSQL NULLを0や空文字へ暗黙変換せず、Optional、nullable型、wasNull()などで元のインジケータ判定を明示的に再現する。",
+        "xp": 20
+      },
+      {
+        "id": "ch2-q12",
+        "type": "choice",
+        "topic": "Pro*C・Pro*COBOL",
+        "difficulty": "practical",
+        "prompt": "Pro*C／Pro*COBOL資産をJavaへ移行するとき、最初にまとめて確認すべきものは？",
+        "options": [
+          "埋込みSQL、ホスト・インジケータ変数、カーソル、SQLCA／WHENEVER、COMMIT／ROLLBACK、プリコンパイル・リンク設定",
+          "EXEC SQLをすべて文字列置換で削除できるかだけ",
+          "COBOLやCのファイル名を.javaへ変更できるかだけ",
+          "SELECT文の表名だけで、エラー処理やトランザクションは不要"
+        ],
+        "answer": 0,
+        "explanation": "Oracleプリコンパイラ資産はSQL文だけでなく、ホスト変数、NULL表現、カーソル状態、SQLCAやWHENEVERによるエラー処理、トランザクション境界、ビルド設定が一体となって動く。",
+        "wrongReasons": [
+          null,
+          "EXEC SQLを削除するとDB処理の意味が失われる。JDBCや永続化層へ意図を移す必要がある。",
+          "拡張子の変更では言語構文、データ型、DBアクセス、実行時依存関係を移行できない。",
+          "表名だけでは、NULL、複数行、エラー、カーソル、コミット範囲などの実行時挙動を再現できない。"
+        ],
+        "migrationTip": "SQL単位の変換ではなく、接続、カーソル、例外、再実行、コミットを含むユースケース単位でJDBC／Springのトランザクション設計へ移す。",
+        "xp": 25
       }
     ]
   },
@@ -631,6 +935,53 @@
           "数字ニブルは0〜9で、末尾Dも有効な負符号なので正しいパック10進データである。"
         ],
         "migrationTip": "生バイトからBigDecimalへ変換するときは、PICの総桁数、scale=2、符号ニブルをセットで扱い、負数とゼロを必ず試験する。",
+        "xp": 25
+      },
+      {
+        "id": "ch4-q10",
+        "type": "choice",
+        "topic": "LOW-VALUE・HIGH-VALUE",
+        "difficulty": "beginner",
+        "prompt": "COBOLのLOW-VALUEとHIGH-VALUEの説明として正しいものは？",
+        "options": [
+          "LOW-VALUEは照合順序の最下位、HIGH-VALUEは最上位の文字を表す表意定数",
+          "LOW-VALUEは数値型の最小値、HIGH-VALUEは数値型の最大値を表す",
+          "LOW-VALUEは空白、HIGH-VALUEは文字9を常に表す",
+          "LOW-VALUEはレコード開始、HIGH-VALUEはレコード終了を表す制御コード"
+        ],
+        "answer": 0,
+        "explanation": "LOW-VALUEとHIGH-VALUEは、使用される照合順序で最下位・最上位に位置する文字を表す表意定数。LOW-VALUES／HIGH-VALUESという複数形も同じ意味で使える。英数字項目かつEBCDIC照合順序では、それぞれX'00'とX'FF'になる。",
+        "wrongReasons": [
+          null,
+          "数値型の最小値・最大値ではなく、文脈に応じた文字の照合順序上の端を表す。",
+          "SPACEや文字9の別名ではない。EBCDIC英数字文脈ではLOW-VALUEはX'00'、HIGH-VALUEはX'FF'である。",
+          "レコード境界を示す制御コードではなく、VALUE、MOVE、比較などで使われる表意定数である。"
+        ],
+        "migrationTip": "Java移行では単なる最小値・最大値に置換せず、未設定値、番兵値、範囲検索など、その項目で担っている業務上の意味を確認する。",
+        "xp": 15
+      },
+      {
+        "id": "ch4-q11",
+        "type": "choice",
+        "topic": "LOW-VALUE・HIGH-VALUE",
+        "difficulty": "practical",
+        "code": "01  LOW-KEY   PIC X(3).\n01  HIGH-KEY  PIC X(3).\n\nMOVE LOW-VALUES  TO LOW-KEY.\nMOVE HIGH-VALUES TO HIGH-KEY.\n\n前提: 英数字項目、EBCDIC照合順序",
+        "prompt": "MOVE後のLOW-KEYとHIGH-KEYの16進表現は？",
+        "options": [
+          "LOW-KEY=X'000000'、HIGH-KEY=X'FFFFFF'",
+          "LOW-KEY=X'00'、HIGH-KEY=X'FF'",
+          "LOW-KEY=X'404040'、HIGH-KEY=X'F9F9F9'",
+          "LOW-KEY=X'303030'、HIGH-KEY=X'393939'"
+        ],
+        "answer": 0,
+        "explanation": "EBCDIC照合順序の英数字文脈ではLOW-VALUEはX'00'、HIGH-VALUEはX'FF'。関連付けられたPIC X(3)の長さに合わせて各値が3バイトへ展開されるため、X'000000'とX'FFFFFF'になる。",
+        "wrongReasons": [
+          null,
+          "表意定数は受け側項目の長さに合わせて展開されるため、PIC X(3)では1バイトのままではない。",
+          "X'40'はEBCDICの空白、X'F9'は数字9であり、LOW-VALUE／HIGH-VALUEそのものではない。",
+          "X'30'とX'39'はASCIIの数字0と9であり、指定されたEBCDIC照合順序の端の値でもない。"
+        ],
+        "migrationTip": "X'FF'は有効なEBCDIC文字ではなく、文字コード変換で置換文字になる可能性がある。Javaではデコード前のbyte[]で番兵値を検出し、必要なら(byte)0x00／(byte)0xFFとして明示的に扱う。",
         "xp": 25
       }
     ]
