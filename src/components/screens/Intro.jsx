@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { STORY } from "../../content/index.js";
+import { OPENING_IMAGES } from "../../content/openingImages.js";
 import { SCENES } from "../scenes/index.js";
 import { Starfield } from "../ui/Ambience.jsx";
 import NightSky from "../ui/NightSky.jsx";
@@ -28,6 +29,7 @@ export default function Intro({ onDone }) {
 
   const sc = scenes[Math.min(i, scenes.length - 1)];
   const Scene = SCENES[sc.scene];
+  const sceneImage = OPENING_IMAGES[sc.scene];
 
   function finish() {
     playSfx("start");
@@ -52,7 +54,11 @@ export default function Intro({ onDone }) {
             className="absolute inset-0"
             style={{ animation: `${KENBURNS[i % KENBURNS.length]} 5.4s ease-out forwards` }}
           >
-            {Scene ? <Scene /> : null}
+            {sceneImage ? (
+              <img src={sceneImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            ) : Scene ? (
+              <Scene />
+            ) : null}
           </div>
           {/* 各シーンの背後にも雲を流して、タイトルまで空気を繋げる */}
           <NightSky showBase={false} moon={false} intensity={0.6} />
