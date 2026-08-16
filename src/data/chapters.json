@@ -27,6 +27,13 @@
         "options": ["\"HELLO\"", "'HELLO'", "HELLO", "new String(HELLO)"],
         "answer": 0,
         "explanation": "MOVEは代入。Javaは = を使い、文字列は必ずダブルクォート \" \" で囲む。",
+        "wrongReasons": [
+          null,
+          "Javaのシングルクォートはchar用で、複数文字の文字列には使えない。",
+          "引用符がないHELLOは文字列ではなく変数名として解釈される。",
+          "HELLOが未定義のままであり、new Stringを使う必要もない。"
+        ],
+        "migrationTip": "COBOLの固定長PIC X項目では右側の空白も値の一部になり得る。Java化ではtrimの要否を項目ごとに決める。",
         "xp": 10
       },
       {
@@ -38,6 +45,13 @@
         "options": ["int", "String", "double", "boolean"],
         "answer": 0,
         "explanation": "PIC 9(n) は数字だけの項目なので整数型(int等)。PIC X(n) は文字なのでString。",
+        "wrongReasons": [
+          null,
+          "PIC 9は数値項目であり、文字列にすると大小比較や計算のたびに変換が必要になる。",
+          "小数部を持たない3桁整数にdoubleを使う理由はなく、2進浮動小数点の性質も持ち込む。",
+          "booleanは真偽値であり、0〜999の数値を保持できない。"
+        ],
+        "migrationTip": "桁数だけでなく符号、小数点、用途、最大値を確認してint・long・BigDecimalを選ぶ。",
         "xp": 10
       },
       {
@@ -52,6 +66,8 @@
           { "left": "PIC S9(7)V99 COMP-3", "right": "BigDecimal" }
         ],
         "explanation": "文字はString、整数はint、金額などのCOMP-3はBigDecimal(第4章で詳しく)。",
+        "wrongReason": "PICのX・9・S・V・USAGEを個別に読み、文字種、符号、小数桁、内部表現をまとめて判断する。",
+        "migrationTip": "型変換表を一律適用せず、桁あふれやNULL相当値、空白・ゼロの業務上の意味も確認する。",
         "xp": 15
       },
       {
@@ -68,6 +84,13 @@
         ],
         "answer": 0,
         "explanation": "REDEFINESは同じ記憶領域に別のデータ記述を与える。Java移行では判別項目などを確認し、型やクラスを明示して表現する。",
+        "wrongReasons": [
+          null,
+          "REDEFINESは新しい領域を確保せず、元の領域を別レイアウトで参照する。",
+          "別ソースを取り込むのはCOPY文の役割で、REDEFINESとは異なる。",
+          "反復する表を定義するのはOCCURS句の役割である。"
+        ],
+        "migrationTip": "どのレイアウトが有効かを示すレコード種別を特定し、sealed classや明示的な変換処理で表す。",
         "xp": 15
       },
       {
@@ -84,6 +107,13 @@
         ],
         "answer": 0,
         "explanation": "OCCURSは表(テーブル)の反復回数を定義する。この例は10文字の要素が20個で、Javaでは配列やListが候補になる。",
+        "wrongReasons": [
+          null,
+          "X(10)は各要素の長さ、OCCURS 20は要素数なので、1個の200桁数値ではない。",
+          "要素長と要素数が逆になっている。10文字の要素が20個である。",
+          "OCCURSはデータ領域の反復定義であり、処理の実行回数を直接指定する文ではない。"
+        ],
+        "migrationTip": "OCCURS DEPENDING ONがある場合は最大件数と実件数を分け、配列境界と余剰領域の扱いを設計する。",
         "xp": 15
       },
       {
@@ -100,6 +130,13 @@
         ],
         "answer": 0,
         "explanation": "FILLERは参照名を持たない項目だが、固定長ファイルでは領域を占める。削除すると後続項目のオフセットがずれる。",
+        "wrongReasons": [
+          null,
+          "プログラムから名前で参照しなくても、ファイル上の位置とレコード長には影響する。",
+          "PIC XのFILLERは文字領域であり、自動的に数値ゼロになるわけではない。",
+          "FILLERの長さはPIC句で明確に区切られ、後続項目まで含まない。"
+        ],
+        "migrationTip": "固定長パーサーのoffsetとlengthへFILLERを反映し、入力と再出力でレコード長が変わらないことをテストする。",
         "xp": 15
       },
       {
@@ -116,6 +153,13 @@
         ],
         "answer": 0,
         "explanation": "COPY文はコピー・ライブラリーのテキストをコンパイル時に取り込む。移行時は利用箇所を洗い出し、共通DTOやスキーマとして一元化する。",
+        "wrongReasons": [
+          null,
+          "実行時にデータを複写する命令ではなく、コンパイル時にソーステキストを展開する。",
+          "サブルーチン呼出しはCALL文で行い、COPY文は実行制御を行わない。",
+          "COPY文そのものに文字コード変換機能はない。"
+        ],
+        "migrationTip": "COPY REPLACINGや複数版のコピーブックを含めて依存関係を調査し、共通モデルの変更影響を管理する。",
         "xp": 15
       }
     ]
@@ -152,6 +196,8 @@
           { "left": "COMMITの単位", "right": "chunkサイズ" }
         ],
         "explanation": "Spring Batchはchunk指向。read→process→(chunk分まとめて)writeの流れ。",
+        "wrongReason": "Readerは入力、Processorは変換、Writerは出力、chunkはトランザクション境界という責務で整理する。",
+        "migrationTip": "既存COBOLのREAD・業務処理・WRITE・COMMIT位置を可視化してから各コンポーネントへ分割する。",
         "xp": 15
       },
       {
@@ -163,6 +209,13 @@
         "options": ["ItemProcessor", "ItemReader", "ItemWriter", "JobLauncher"],
         "answer": 0,
         "explanation": "入力を受け取り加工して次へ渡す処理はProcessorの役割。",
+        "wrongReasons": [
+          null,
+          "ItemReaderは入力取得を担当し、税計算のような業務加工を持たせると責務が混ざる。",
+          "ItemWriterは加工済みデータの永続化を担当し、1件ごとの税計算の中心ではない。",
+          "JobLauncherはJobを起動する入口であり、レコード単位の業務処理は行わない。"
+        ],
+        "migrationTip": "Processorを純粋な変換に近づけ、DB更新などの副作用はWriterや専用サービスへ分離するとテストしやすい。",
         "xp": 10
       },
       {
@@ -178,6 +231,8 @@
           "トランザクションを確定(commit)"
         ],
         "explanation": "read→processをchunk分くり返し、まとめてwriteしてcommitするのが基本サイクル。",
+        "wrongReason": "writeは通常chunk分をまとめて行い、その後にトランザクションを確定する。read・process・write・commitの境界を区別する。",
+        "migrationTip": "元処理のCOMMIT間隔と再実行単位を確認し、性能だけでなくロールバック範囲を考えてchunkサイズを決める。",
         "xp": 15
       },
       {
@@ -194,6 +249,13 @@
         ],
         "answer": 0,
         "explanation": "COBOLのCALLには静的・動的呼出しがあり、USINGでデータを受け渡す。Java化では契約と副作用を整理してメソッドやサービスの境界にする。",
+        "wrongReasons": [
+          null,
+          "名前を合わせるだけでは、引数の受渡方式や共有データ、戻り方などの契約を再現できない。",
+          "グローバル変数へ寄せると依存関係が隠れ、並列実行やテストが難しくなる。",
+          "ItemReaderは入力取得の役割であり、すべてのサブルーチンの移行先ではない。"
+        ],
+        "migrationTip": "BY REFERENCE・BY CONTENT・BY VALUE、LINKAGE SECTION、RETURNING、呼出先の再入可能性を棚卸しする。",
         "xp": 20
       }
     ]
@@ -230,6 +292,8 @@
           "本番切替"
         ],
         "explanation": "まず今あるものを知り、方針を決めてから変換・テスト・切替へ進む。",
+        "wrongReason": "現状を把握する前に変換へ進むと依存関係や例外仕様を落とす。分析結果を方針とテスト計画へ順番に反映する。",
+        "migrationTip": "各工程の完了条件と成果物を決め、旧新比較に使う基準データを現状分析の段階から保存する。",
         "xp": 15
       },
       {
@@ -241,6 +305,13 @@
         "options": ["現状分析(棚卸し)", "テスト", "本番切替", "変換"],
         "answer": 0,
         "explanation": "規模と依存を把握しないと方針も見積もりも立たない、移行の土台。",
+        "wrongReasons": [
+          null,
+          "テストは移行結果を確認する工程であり、資産全体の棚卸しを開始する段階ではない。",
+          "本番切替まで依存関係が不明なままでは、安全な切替や切戻しを計画できない。",
+          "変換対象と順序を決める前に、資産量と依存関係の把握が必要である。"
+        ],
+        "migrationTip": "プログラムだけでなくCOPY句、JCL、ファイル、DB、スケジューラー、外部IFも依存関係として収集する。",
         "xp": 10
       },
       {
@@ -257,6 +328,13 @@
         ],
         "answer": 0,
         "explanation": "ビッグバン移行はリスクが高い。段階的移行＋検証が安全。",
+        "wrongReasons": [
+          null,
+          "一斉切替は障害範囲と切戻し負荷が大きく、十分な根拠なしにはリスクが高い。",
+          "本番後に初めてテストすると、誤データや業務停止を防げない。",
+          "属人的な記憶では仕様漏れと引継ぎ不能を招くため、判断根拠を文書化する必要がある。"
+        ],
+        "migrationTip": "業務境界やデータ連携単位で移行ウェーブを作り、各段階に旧新比較と切戻し条件を設ける。",
         "xp": 15
       },
       {
@@ -272,6 +350,8 @@
           "実データと帳票で字形・意味を照合する"
         ],
         "explanation": "外字はコードだけでなく字形と業務上の意味も重要。対応表を作り、変換不能文字やフォントも含めて実データで検証する。",
+        "wrongReason": "対応先を決めずに変換すると、同じコードが環境ごとに別の字形になったり代替文字へ化けたりする。",
+        "migrationTip": "コード値、字形画像、読み、利用者、出現件数、Unicode対応先、代替表記を外字台帳として管理する。",
         "xp": 20
       },
       {
@@ -288,6 +368,13 @@
         ],
         "answer": 0,
         "explanation": "変換後は代表文字・外字・境界値を照合し、変換エラー件数や往復変換の差分も確認する。件数一致だけでは内容の正しさを保証できない。",
+        "wrongReasons": [
+          null,
+          "文字コードが違ってもレコード単位の件数比較はできる。問題は内容の一致を保証できないこと。",
+          "JavaのStringはUnicodeを扱える。問題になるのは入出力時の正しいデコードとエンコードである。",
+          "文字変換でレコード件数が必ず増えるわけではなく、固定長ではバイト長の変化に注意する。"
+        ],
+        "migrationTip": "文字単位の照合に加え、変換不能文字、代替文字、バイト長、固定長レコードのオフセットを自動検査する。",
         "xp": 15
       }
     ]
@@ -319,6 +406,13 @@
         "options": ["BigDecimal", "double", "float", "int"],
         "answer": 0,
         "explanation": "COMP-3は10進を正確に保持する。金額はBigDecimalで扱う。",
+        "wrongReasons": [
+          null,
+          "doubleは2進浮動小数点であり、10進小数を常に厳密には保持できない。",
+          "floatはdoubleより精度が低く、金額の正確な移行先には適さない。",
+          "intは小数部を直接保持できず、桁とスケールの意図も失われる。"
+        ],
+        "migrationTip": "PICの全桁数とV以降の小数桁数をBigDecimalのprecisionとscaleとして明示し、丸め規則も合わせる。",
         "xp": 10
       },
       {
@@ -335,6 +429,13 @@
         ],
         "answer": 0,
         "explanation": "0.1+0.2 が 0.3 にならないように、doubleは10進小数を正確に表せない。金額では致命的。",
+        "wrongReasons": [
+          null,
+          "問題は速度ではなく表現方式であり、計算結果に微小な誤差が入り得る。",
+          "doubleは負数を扱えるため、負数不可が問題ではない。",
+          "doubleは固定サイズの型であり、無限にメモリを使うわけではない。"
+        ],
+        "migrationTip": "計算途中のscale、除算時のRoundingMode、比較でequalsとcompareToのどちらを使うかまで規約化する。",
         "xp": 15
       },
       {
@@ -351,6 +452,13 @@
         ],
         "answer": 0,
         "explanation": "落とし穴: double引数のコンストラクタはその時点で誤差を持ち込む。文字列で渡すのが正解(BigDecimal.valueOfも可)。",
+        "wrongReasons": [
+          null,
+          "doubleの123.45は既に2進近似値なので、その値をBigDecimalへ正確に展開すると意図しない桁が現れる。",
+          "プリミティブなdoubleをBigDecimalへ直接キャストする構文は使えない。",
+          "floatはdoubleより精度が低く、BigDecimal化しても失われた精度は戻らない。"
+        ],
+        "migrationTip": "固定値は文字列コンストラクタ、外部入力は文字列から変換し、doubleを経由させない。",
         "xp": 20
       },
       {
@@ -362,6 +470,13 @@
         "options": ["3バイト", "5バイト", "6バイト", "10バイト"],
         "answer": 0,
         "explanation": "COMP-3は1バイトに数字2桁を詰め、最後の半バイトに符号を持つ。5桁＋符号で6ニブル、つまり3バイト。",
+        "wrongReasons": [
+          null,
+          "1桁1バイトのDISPLAY形式と混同している。COMP-3は2桁を1バイトへ詰める。",
+          "5桁に符号用の半バイトを加えるため6ニブルであり、6バイトではない。",
+          "各桁を2バイトで保持する形式ではない。"
+        ],
+        "migrationTip": "パック10進を読むライブラリには桁数、scale、符号ニブルを渡し、正負と最大・最小値のバイト列で試験する。",
         "xp": 20
       },
       {
@@ -376,6 +491,8 @@
           { "left": "UTF-8", "right": "Unicodeの可変長エンコーディング" }
         ],
         "explanation": "930と939はどちらも日本語の混合EBCDICだがSBCS部分が異なる。移行では名前だけでなく実データのCCSIDを確定して変換する。",
+        "wrongReason": "930と939の違いは主にSBCS側にある。UTF-8はEBCDICではなくUnicodeのエンコーディングである。",
+        "migrationTip": "ファイル、DB、端末、ジョブごとに実際のCCSIDを確認し、環境のデフォルト文字コードへ依存しない。",
         "xp": 20
       },
       {
@@ -390,6 +507,8 @@
           { "left": "混合データ", "right": "SBCSとDBCSが同じデータ内に現れる" }
         ],
         "explanation": "SBCSはSingle-Byte Character Set、DBCSはDouble-Byte Character Setの略。日本語の混合EBCDICでは英数字などのSBCSと漢字などのDBCSが共存する。",
+        "wrongReason": "SBCSとDBCSは文字を表すバイト数の区分であり、混合データでは両方の解釈状態が必要になる。",
+        "migrationTip": "文字数とバイト数を混同せず、固定長切り出しはデコード前のバイト列に対して行う。",
         "xp": 15
       },
       {
@@ -406,6 +525,13 @@
         ],
         "answer": 0,
         "explanation": "SO(Shift-Out)とSI(Shift-In)は、混合データ中で1バイト文字と2バイト文字の解釈を切り替える制御コード。単純な文字置換ではなく対応CCSIDで変換する。",
+        "wrongReasons": [
+          null,
+          "SO/SIはレコード境界ではなく、同一データ内の文字集合の切替を示す。",
+          "数値の符号はCOMP-3の符号ニブルなどで表し、SO/SIとは無関係である。",
+          "SO/SIは改行ではなく文字解釈状態を切り替える1バイトの制御コードである。"
+        ],
+        "migrationTip": "SO/SIを単純削除せず、IBM-930/939対応デコーダーへ完全なバイト列を渡す。欠落や不正な入れ子も検出する。",
         "xp": 20
       }
     ]

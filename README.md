@@ -159,8 +159,8 @@ src/
 | `matching` | 左右の対応づけ | `pairs`（`left` / `right`） |
 | `ordering` | 並べ替え。**配列の順序が正解** | `items` |
 
-いずれも `id`（全問でユニーク）・`topic`・`difficulty`・`prompt`・`explanation`・`xp` が必要です。`difficulty` は `beginner` / `intermediate` / `advanced` / `practical` のいずれかです。
-通常ステージでは章の問題プールから最大5問を選び、選択式・穴埋めの選択肢も毎回並べ替えます。`npm run dev` 中はID重複、メタデータ不足、`answer` の範囲外を警告します。
+いずれも `id`（全問でユニーク）・`topic`・`difficulty`・`prompt`・`explanation`・`migrationTip`・`xp` が必要です。`difficulty` は `beginner` / `intermediate` / `advanced` / `practical` のいずれかです。選択式・穴埋めでは `options` と同じ長さの `wrongReasons`、対応付け・並べ替えでは `wrongReason` も設定します。
+通常ステージでは章の問題プールから最大5問を選び、選択式・穴埋めの選択肢と誤答理由を対応させたまま毎回並べ替えます。回答後は正誤理由、全体解説、Java移行の実務ポイントを表示します。`npm run dev` 中はID重複、解説データを含むメタデータ不足、`answer` の範囲外を警告します。
 
 ### BGM・効果音を変える
 

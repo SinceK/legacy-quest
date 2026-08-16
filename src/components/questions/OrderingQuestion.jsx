@@ -88,7 +88,14 @@ export default function OrderingQuestion({ q, onResult, onNext }) {
           </button>
         </div>
       ) : (
-        <Feedback correct={correct} explanation={q.explanation} xp={q.xp} onNext={onNext} />
+        <Feedback
+          correct={correct}
+          explanation={q.explanation}
+          wrongReason={correct ? null : q.wrongReason}
+          migrationTip={q.migrationTip}
+          xp={q.xp}
+          onNext={onNext}
+        />
       )}
     </div>
   );

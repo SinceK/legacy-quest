@@ -24,6 +24,14 @@ if (import.meta.env.DEV) {
       ids.add(q.id);
       if (!q.topic) console.warn(`[content] topicが未設定: ${q.id}`);
       if (!difficulties.has(q.difficulty)) console.warn(`[content] difficultyが不正: ${q.id}`);
+      if (!q.migrationTip) console.warn(`[content] migrationTipが未設定: ${q.id}`);
+      if (q.type === "choice" || q.type === "fill") {
+        if (!Array.isArray(q.wrongReasons) || q.wrongReasons.length !== q.options?.length) {
+          console.warn(`[content] wrongReasonsとoptionsの数が不一致: ${q.id}`);
+        }
+      } else if (!q.wrongReason) {
+        console.warn(`[content] wrongReasonが未設定: ${q.id}`);
+      }
       if ((q.type === "choice" || q.type === "fill") && q.options?.[q.answer] === undefined) {
         console.warn(`[content] answerが選択肢の範囲外: ${q.id}`);
       }

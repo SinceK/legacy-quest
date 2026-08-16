@@ -1,7 +1,7 @@
 import { Sparkles } from "../ui/Ambience.jsx";
 import { useAudio } from "../../audio/AudioProvider.jsx";
 
-export default function Feedback({ correct, explanation, xp, onNext }) {
+export default function Feedback({ correct, explanation, wrongReason, migrationTip, xp, onNext }) {
   const { playSfx } = useAudio();
   return (
     <div
@@ -20,7 +20,22 @@ export default function Feedback({ correct, explanation, xp, onNext }) {
       <div className={"relative font-bold mb-1 " + (correct ? "text-emerald-300" : "text-rose-300")}>
         {correct ? "⚔️ クリティカル！！！" : "🛡️ 反撃をくらった…"}
       </div>
-      <p className="relative text-sm text-slate-200 leading-relaxed">{explanation}</p>
+      {wrongReason && (
+        <div className="relative mb-3 rounded-xl border border-rose-400/25 bg-rose-950/55 p-3">
+          <div className="mb-1 text-[10px] font-black tracking-[.16em] text-rose-300">なぜ違う？</div>
+          <p className="text-sm leading-relaxed text-rose-100">{wrongReason}</p>
+        </div>
+      )}
+      <div className="relative">
+        <div className="mb-1 text-[10px] font-black tracking-[.16em] text-slate-400">解説</div>
+        <p className="text-sm text-slate-200 leading-relaxed">{explanation}</p>
+      </div>
+      {migrationTip && (
+        <div className="relative mt-3 rounded-xl border border-sky-400/25 bg-sky-950/55 p-3">
+          <div className="mb-1 text-[10px] font-black tracking-[.16em] text-sky-300">Java移行の実務ポイント</div>
+          <p className="text-sm leading-relaxed text-sky-100">{migrationTip}</p>
+        </div>
+      )}
       <button
         onClick={() => {
           playSfx("select");

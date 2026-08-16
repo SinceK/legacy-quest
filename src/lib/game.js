@@ -30,6 +30,9 @@ export function shuffleQuestionOptions(question) {
     ...question,
     options: options.map((item) => item.v),
     answer: options.findIndex((item) => item.i === question.answer),
+    wrongReasons: question.wrongReasons
+      ? options.map((item) => question.wrongReasons[item.i])
+      : undefined,
   };
 }
 
