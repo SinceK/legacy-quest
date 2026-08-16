@@ -3,6 +3,10 @@
 COBOL技術者がJavaへの移行スキルを学ぶ、RPG風のブラウザ学習ゲームです。
 ダンジョン（章）の主を倒しながら、COBOLの巻物をJavaへ読み替えていきます。
 
+オープニングからマップ、4章のボス戦、最終勝利画面まで、丸みのある2DファンタジーRPGの世界観で統一しています。各章では選択・穴埋め・対応付け・並べ替えに回答し、XPと4種類のスキルを成長させます。
+
+![LEGACY QUESTの章選択マップ](src/assets/game/map.webp)
+
 - **移行元**：IBM Enterprise COBOL（z/OS）ベースの標準構文
 - **移行先**：Spring Batch / Spring Boot
 - 詳しい仕様は [`docs/要件定義書_COBOL-Java学習ゲーム.md`](docs/要件定義書_COBOL-Java学習ゲーム.md) と
@@ -19,6 +23,7 @@ COBOL技術者がJavaへの移行スキルを学ぶ、RPG風のブラウザ学�
 | スタイル | Tailwind CSS 4 |
 | 進捗保存 | localStorage |
 | BGM・効果音 | Web Audio API によるリアルタイム合成（音声ファイル不要） |
+| ビジュアル | WebP背景画像 + SVGキャラクター + CSSアニメーション |
 
 バックエンド・ログイン機能はありません。進捗はブラウザ内にのみ保存されます。
 
@@ -39,6 +44,9 @@ npm run preview  # ビルド結果の確認
 src/
 ├── main.jsx                 エントリポイント（AudioProviderでApp を包む）
 ├── App.jsx                  画面遷移・レベルアップ演出・BGM切り替え
+├── assets/
+│   ├── opening/               オープニング用イラスト3枚（WebP）
+│   └── game/                  マップ・4章・勝利画面の背景6枚（WebP）
 ├── data/                    ★コンテンツ（JSON）
 │   ├── chapters.json          章・モンスター・COBOL例・問題
 │   ├── skills.json            スキル4種の定義
@@ -46,7 +54,10 @@ src/
 │   ├── ui.json                XP設定・コードレインの語彙・賢者のセリフ
 │   ├── bgm.json               BGM 4曲の譜面データ
 │   └── sfx.json               効果音9種の定義
-├── content/index.js         JSONの読み込み口（開発時は簡易バリデーション）
+├── content/
+│   ├── index.js               JSONの読み込み口（開発時は簡易バリデーション）
+│   ├── openingImages.js       オープニング画像の登録・事前読み込み
+│   └── gameImages.js          本編背景画像の登録
 ├── audio/
 │   ├── AudioEngine.js         譜面JSON→Web Audioへの合成エンジン
 │   ├── AudioProvider.jsx      React連携・音声設定の永続化
@@ -54,13 +65,22 @@ src/
 ├── hooks/useGameProgress.js localStorageへの進捗保存と復元
 ├── lib/                     game.js（XP計算等）/ storage.js / theme.js
 ├── components/
-│   ├── ui/                    ロゴ・コードレイン・雲海・火の粉・音声トグル
+│   ├── ui/                    ロゴ・背景・光粒子・衝撃・音声トグル
 │   ├── characters/            賢者・モンスター（SVG）
 │   ├── scenes/                オープニングの背景SVGとシーン登録表
 │   ├── questions/             選択式・組み合わせ・並べ替えの出題UI
 │   └── screens/               Intro / TitleFlight / Home / Stage / 結果 / Victory
-└── styles/index.css         Tailwind読み込みとゲーム内キーフレーム
+└── styles/index.css         Tailwind読み込み、RPG共通UI、キーフレーム
 ```
+
+## ゲームの流れ
+
+1. 初回起動時に開始ゲート、物語、タイトル演出を再生
+2. マップで解放済みの章を選択
+3. ダンジョンへ突入し、章ごとのボスと遭遇
+4. COBOLコードを読みながら設問に回答してボスのHPを減らす
+5. 章クリアでXP・スキルを獲得し、次章を解放
+6. 全4章クリアで最終勝利画面を表示
 
 ## オープニング
 
@@ -69,12 +89,13 @@ src/
 | 幕 | 実装 | 内容 |
 | --- | --- | --- |
 | 開始ゲート | `screens/IntroGate.jsx` | 雲海の中でタップを待つ。ここで音を鳴らす許可を得る |
-| 物語 | `screens/Intro.jsx` | `story.json` の5シーンを字幕付きで送る |
+| 物語 | `screens/Intro.jsx` | `story.json` の3シーンをイラストと字幕で送る |
 | タイトル飛来 | `screens/TitleFlight.jsx` | 雲の奥からロゴが飛来し、稲妻とともに着地する |
 
 演出の中身：
 
-- **雲海**（`ui/NightSky.jsx`）… `feTurbulence` のフラクタルノイズを3層、別々の速度で流して視差を作る。画像を持たないので読み込み待ちがなく、どの解像度でも滲まない
+- **背景イラスト**（`assets/opening/*.webp`）… 王国、危機、旅立ちの3場面を本編と同じ2Dゲームイラストで描画し、事前読み込みで切り替え時のちらつきを抑える
+- **背景フォールバック**（`components/scenes/`）… 画像を利用できない場合もSVGシーンを表示する
 - **火の粉**（`ui/Embers.jsx`）… 金色の粒がゆらぎながら舞い上がる
 - **ロゴ飛来** … 遠方から `translateZ(-2600px)` で迫り、着地でグローが焼き切れて金属質が残る
 - **音楽** … ホ短調・3拍子のチェレスタのワルツ（`bgm.json` の `title`）
@@ -85,6 +106,17 @@ src/
 - ロゴの飛来・着地・ボタン出現 → `TitleFlight.jsx` 冒頭の `FLIGHT_MS` / `IMPACT_MS` / `CTA_MS`
 
 `prefers-reduced-motion` が有効な環境では、これらのアニメーションは自動的に停止します。
+
+## 本編のビジュアルと演出
+
+- `assets/game/map.webp`：章選択マップの背景
+- `assets/game/battle-ch1.webp`〜`battle-ch4.webp`：各章のテーマに対応するダンジョン背景
+- `assets/game/victory.webp`：全章クリア後の背景
+- `GameBackdrop.jsx`：背景の視差移動、色付きオーラ、上昇するルーンを共通管理
+- `styles/index.css`：RPGパネル、クエストカード、ボスHP、回答カード、勝利光線などを共通スタイル化
+- 回答時のフラッシュ、画面振動、ノックバック、コンボ、XP上昇、レベルアップ演出を実装
+
+画像は装飾目的で、ゲーム進行や問題データには依存しません。BGMと効果音は個別に無効化でき、アニメーションはOS／ブラウザの視差効果を減らす設定に従います。
 
 ## コンテンツの追加・編集
 
@@ -117,7 +149,7 @@ src/
 }
 ```
 
-### 問題の3形式
+### 問題の4形式
 
 | type | 説明 | 必要なキー |
 | --- | --- | --- |
