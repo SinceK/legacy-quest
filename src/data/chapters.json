@@ -47,6 +47,62 @@
         ],
         "explanation": "文字はString、整数はint、金額などのCOMP-3はBigDecimal(第4章で詳しく)。",
         "xp": 15
+      },
+      {
+        "id": "ch1-q4",
+        "type": "choice",
+        "prompt": "REDEFINES句の役割として正しいものは？",
+        "options": [
+          "同じ記憶領域を別のデータ構造として解釈する",
+          "項目用の記憶領域を複製して2倍にする",
+          "別プログラムから項目を読み込む",
+          "項目を可変長の配列にする"
+        ],
+        "answer": 0,
+        "explanation": "REDEFINESは同じ記憶領域に別のデータ記述を与える。Java移行では判別項目などを確認し、型やクラスを明示して表現する。",
+        "xp": 15
+      },
+      {
+        "id": "ch1-q5",
+        "type": "choice",
+        "prompt": "05 ITEM PIC X(10) OCCURS 20 TIMES. に対応する考え方は？",
+        "options": [
+          "10文字の項目を20個持つ配列",
+          "200桁の数値を1個持つ",
+          "20文字の項目を10個持つ配列",
+          "実行時に20回メソッドを呼ぶ"
+        ],
+        "answer": 0,
+        "explanation": "OCCURSは表(テーブル)の反復回数を定義する。この例は10文字の要素が20個で、Javaでは配列やListが候補になる。",
+        "xp": 15
+      },
+      {
+        "id": "ch1-q6",
+        "type": "choice",
+        "prompt": "固定長レコード内の 05 FILLER PIC X(5). を移行するときの注意は？",
+        "options": [
+          "名前がなくても5バイト分の位置を保つ必要がある",
+          "使われないので常に削除してよい",
+          "自動的に数値ゼロとして扱う",
+          "後続項目もFILLERの一部になる"
+        ],
+        "answer": 0,
+        "explanation": "FILLERは参照名を持たない項目だが、固定長ファイルでは領域を占める。削除すると後続項目のオフセットがずれる。",
+        "xp": 15
+      },
+      {
+        "id": "ch1-q7",
+        "type": "choice",
+        "prompt": "COPY CUSTOMER-REC. の主な目的は？",
+        "options": [
+          "共通のデータ定義などをコピー句として取り込む",
+          "実行中のレコードを別ファイルへ複写する",
+          "サブルーチンを動的に呼び出す",
+          "文字コードをUnicodeへ変換する"
+        ],
+        "answer": 0,
+        "explanation": "COPY文はコピー・ライブラリーのテキストをコンパイル時に取り込む。移行時は利用箇所を洗い出し、共通DTOやスキーマとして一元化する。",
+        "xp": 15
       }
     ]
   },
@@ -103,6 +159,20 @@
         ],
         "explanation": "read→processをchunk分くり返し、まとめてwriteしてcommitするのが基本サイクル。",
         "xp": 15
+      },
+      {
+        "id": "ch2-q4",
+        "type": "choice",
+        "prompt": "CALL 'CALC-TAX' USING IN-REC OUT-REC. をJavaへ移す際に最も重要な確認は？",
+        "options": [
+          "呼出方式とUSING引数、共有領域、副作用を明らかにする",
+          "サブルーチン名だけを同名のJavaクラスにする",
+          "すべての引数をグローバル変数へ移す",
+          "呼出先を必ずItemReaderに実装する"
+        ],
+        "answer": 0,
+        "explanation": "COBOLのCALLには静的・動的呼出しがあり、USINGでデータを受け渡す。Java化では契約と副作用を整理してメソッドやサービスの境界にする。",
+        "xp": 20
       }
     ]
   },
@@ -160,6 +230,33 @@
         "answer": 0,
         "explanation": "ビッグバン移行はリスクが高い。段階的移行＋検証が安全。",
         "xp": 15
+      },
+      {
+        "id": "ch3-q4",
+        "type": "ordering",
+        "prompt": "外字を含むデータ移行の安全な手順を並べよ",
+        "items": [
+          "使用中の外字と出現箇所を棚卸しする",
+          "各外字のUnicode等への対応表を決める",
+          "変換処理と代替表示ルールを実装する",
+          "実データと帳票で字形・意味を照合する"
+        ],
+        "explanation": "外字はコードだけでなく字形と業務上の意味も重要。対応表を作り、変換不能文字やフォントも含めて実データで検証する。",
+        "xp": 20
+      },
+      {
+        "id": "ch3-q5",
+        "type": "choice",
+        "prompt": "文字コード移行テストで、単純な件数比較だけでは不十分な理由は？",
+        "options": [
+          "同じ件数でも文字化け、欠落、別文字への誤変換が起こり得る",
+          "EBCDICとUnicodeではレコード件数を比較できない",
+          "Javaは日本語を扱えない",
+          "文字変換をすると必ずレコードが増える"
+        ],
+        "answer": 0,
+        "explanation": "変換後は代表文字・外字・境界値を照合し、変換エラー件数や往復変換の差分も確認する。件数一致だけでは内容の正しさを保証できない。",
+        "xp": 15
       }
     ]
   },
@@ -216,6 +313,53 @@
         ],
         "answer": 0,
         "explanation": "落とし穴: double引数のコンストラクタはその時点で誤差を持ち込む。文字列で渡すのが正解(BigDecimal.valueOfも可)。",
+        "xp": 20
+      },
+      {
+        "id": "ch4-q4",
+        "type": "choice",
+        "prompt": "PIC S9(5) COMP-3 が使用する記憶域は何バイト？",
+        "options": ["3バイト", "5バイト", "6バイト", "10バイト"],
+        "answer": 0,
+        "explanation": "COMP-3は1バイトに数字2桁を詰め、最後の半バイトに符号を持つ。5桁＋符号で6ニブル、つまり3バイト。",
+        "xp": 20
+      },
+      {
+        "id": "ch4-q5",
+        "type": "matching",
+        "prompt": "日本語EBCDICのCCSIDと特徴を対応づけよ",
+        "pairs": [
+          { "left": "IBM-930", "right": "カタカナ系SBCS＋漢字DBCS" },
+          { "left": "IBM-939", "right": "英小文字を含むラテン系SBCS＋漢字DBCS" },
+          { "left": "UTF-8", "right": "Unicodeの可変長エンコーディング" }
+        ],
+        "explanation": "930と939はどちらも日本語の混合EBCDICだがSBCS部分が異なる。移行では名前だけでなく実データのCCSIDを確定して変換する。",
+        "xp": 20
+      },
+      {
+        "id": "ch4-q6",
+        "type": "matching",
+        "prompt": "SBCS・DBCS・混合データの意味を対応づけよ",
+        "pairs": [
+          { "left": "SBCS", "right": "1文字を1バイトで表す文字集合" },
+          { "left": "DBCS", "right": "1文字を2バイトで表す文字集合" },
+          { "left": "混合データ", "right": "SBCSとDBCSが同じデータ内に現れる" }
+        ],
+        "explanation": "SBCSはSingle-Byte Character Set、DBCSはDouble-Byte Character Setの略。日本語の混合EBCDICでは英数字などのSBCSと漢字などのDBCSが共存する。",
+        "xp": 15
+      },
+      {
+        "id": "ch4-q7",
+        "type": "choice",
+        "prompt": "日本語の混合EBCDICデータにあるSO(X'0E')とSI(X'0F')の役割は？",
+        "options": [
+          "SOでDBCS領域を開始し、SIでSBCS領域へ戻す",
+          "SOでレコードを開始し、SIでレコードを終了する",
+          "正数と負数の符号を表す",
+          "改行コードを2バイトで表す"
+        ],
+        "answer": 0,
+        "explanation": "SO(Shift-Out)とSI(Shift-In)は、混合データ中で1バイト文字と2バイト文字の解釈を切り替える制御コード。単純な文字置換ではなく対応CCSIDで変換する。",
         "xp": 20
       }
     ]

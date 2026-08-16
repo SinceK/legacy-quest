@@ -15,11 +15,11 @@ export function shuffle(arr) {
   return a;
 }
 
-/** 直前の章をクリアしていれば解放。第1章は常に解放。 */
-export function isUnlocked(chapters, index, completed) {
-  return index === 0 || completed.includes(chapters[index - 1].id);
+/** すべての章は最初から選択可能。引数は呼び出し側との互換性のため受け取る。 */
+export function isUnlocked() {
+  return true;
 }
 
 export function nextChapterIndex(chapters, completed) {
-  return chapters.findIndex((c, i) => !completed.includes(c.id) && isUnlocked(chapters, i, completed));
+  return chapters.findIndex((c) => !completed.includes(c.id));
 }
