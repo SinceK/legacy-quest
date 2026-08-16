@@ -1,0 +1,871 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-serif: Georgia, "Times New Roman", "Yu Mincho", serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #070a12;
+  color: #e2e8f0;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* ===== ゲーム内アニメーション ===== */
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes shakeX {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-7px);
+  }
+  40% {
+    transform: translateX(7px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes screenShake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  12% {
+    transform: translate(-9px, 5px);
+  }
+  26% {
+    transform: translate(10px, -5px);
+  }
+  40% {
+    transform: translate(-8px, -3px);
+  }
+  56% {
+    transform: translate(8px, 3px);
+  }
+  72% {
+    transform: translate(-5px, 2px);
+  }
+  88% {
+    transform: translate(4px, -1px);
+  }
+}
+@keyframes bigShake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  8% {
+    transform: translate(-15px, 8px);
+  }
+  22% {
+    transform: translate(16px, -8px);
+  }
+  38% {
+    transform: translate(-14px, -6px);
+  }
+  54% {
+    transform: translate(14px, 6px);
+  }
+  70% {
+    transform: translate(-9px, 4px);
+  }
+  86% {
+    transform: translate(6px, -3px);
+  }
+}
+@keyframes punch {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.07);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes knockback {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+  16% {
+    transform: translateX(20px) rotate(8deg);
+  }
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+}
+@keyframes hardFlash {
+  0% {
+    filter: brightness(1);
+  }
+  10% {
+    filter: brightness(3.8) saturate(0);
+  }
+  45% {
+    filter: brightness(1.5);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes riseFade {
+  0% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-42px);
+    opacity: 0;
+  }
+}
+@keyframes dmgFly {
+  0% {
+    transform: translate(-50%, 0) scale(0.5);
+    opacity: 0;
+  }
+  18% {
+    transform: translate(-50%, -14px) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -64px) scale(1);
+    opacity: 0;
+  }
+}
+@keyframes ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
+}
+@keyframes shock {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
+@keyframes burst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.25);
+  }
+}
+@keyframes slash {
+  0% {
+    transform: translateX(-150%) rotate(-32deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150%) rotate(-32deg);
+    opacity: 0;
+  }
+}
+@keyframes critFlash {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes redPulse {
+  0% {
+    opacity: 0;
+  }
+  14% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes whiteFlash {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes koFall {
+  0% {
+    transform: rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-16deg) translateY(10px);
+    opacity: 0.5;
+  }
+}
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(251, 191, 36, 0);
+  }
+  50% {
+    box-shadow: 0 0 44px rgba(251, 191, 36, 0.95);
+  }
+}
+@keyframes fadeUp {
+  0% {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes sparkle {
+  0% {
+    transform: scale(0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6) rotate(120deg);
+    opacity: 0;
+  }
+}
+@keyframes blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes titlePop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes dropIn {
+  0% {
+    transform: translateY(-34px);
+    opacity: 0;
+  }
+  72% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fall {
+  0% {
+    transform: translateY(-25%);
+  }
+  100% {
+    transform: translateY(125%);
+  }
+}
+@keyframes ctaPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.4);
+  }
+}
+@keyframes slamIn {
+  0% {
+    transform: translateY(-60px) scale(2.4);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(8px) scale(0.9);
+    opacity: 1;
+  }
+  78% {
+    transform: translateY(0) scale(1.06);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes bannerIn {
+  0% {
+    transform: translateY(-18px) scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(3px) scale(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes comboPop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes bigText {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.16);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes driftUp {
+  0% {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(-70px);
+    opacity: 0;
+  }
+}
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate(-2%, -3%);
+  }
+}
+/* カットが変わるたび、ピントを送り込むように少しずつ像を結ばせる */
+@keyframes cineIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: blur(9px);
+  }
+  55% {
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+/* 字幕は文字間が開いた状態からゆっくり閉じながら像を結ぶ、映画の題字のような入り方 */
+@keyframes captionIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    letter-spacing: 0.14em;
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: normal;
+    filter: blur(0);
+  }
+}
+@keyframes orbPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.18);
+  }
+}
+@keyframes flicker {
+  0%,
+  18%,
+  22%,
+  55%,
+  60%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  58% {
+    opacity: 0.15;
+  }
+}
+@keyframes streamUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-86px);
+    opacity: 0;
+  }
+}
+@keyframes crackDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes debris {
+  0% {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(64px) rotate(140deg);
+    opacity: 0;
+  }
+}
+@keyframes alertPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.09);
+  }
+}
+@keyframes boltFlash {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  84%,
+  92% {
+    opacity: 1;
+  }
+}
+@keyframes rumble {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1.5px, 1px);
+  }
+  50% {
+    transform: translate(1.5px, -1px);
+  }
+  75% {
+    transform: translate(-1px, 1px);
+  }
+}
+@keyframes hopeRise {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-56px) scale(1);
+    opacity: 0;
+  }
+}
+@keyframes letterbox {
+  0% {
+    transform: scaleY(2.4);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes diveZoom {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+@keyframes portalIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes sweep {
+  to {
+    transform: translateX(var(--w));
+  }
+}
+@keyframes shine {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ===== 映画的オープニング（雲海／タイトル飛来） ===== */
+
+/* 雲の層をゆっくり横へ流す。--dx で層ごとの速度差＝視差をつける */
+@keyframes cloudDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--dx), var(--dy, 0), 0);
+  }
+}
+
+/* 空全体をゆっくり寄せて奥行きを出す */
+@keyframes skyPush {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.16);
+  }
+}
+
+/* タイトルロゴが遥か遠方から手前へ飛んでくる */
+@keyframes logoFlyIn {
+  0% {
+    transform: perspective(1400px) translate3d(0, 7%, -2600px) rotateX(24deg) rotateZ(-5deg);
+    opacity: 0;
+    filter: blur(14px);
+  }
+  12% {
+    opacity: 1;
+  }
+  68% {
+    filter: blur(1.5px);
+  }
+  84% {
+    transform: perspective(1400px) translate3d(0, 0, 150px) rotateX(2deg) rotateZ(0deg);
+    filter: blur(0);
+  }
+  100% {
+    transform: perspective(1400px) translate3d(0, 0, 0) rotateX(0) rotateZ(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* 飛来中は金色に発光し、着地後にグローが焼き切れて金属質が残る */
+@keyframes logoBloom {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  62% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.26;
+  }
+}
+
+/* 着地の瞬間に走る光条 */
+@keyframes flareSweep {
+  0%,
+  56% {
+    opacity: 0;
+    transform: translateX(-55%) scaleX(0.25);
+  }
+  72% {
+    opacity: 0.95;
+    transform: translateX(0) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(38%) scaleX(1.35);
+  }
+}
+
+/* 像を結ぶ瞬間、画面全体が金色にふわりと満ちる */
+@keyframes impactFlash {
+  0%,
+  58% {
+    opacity: 0;
+  }
+  62% {
+    opacity: 0.6;
+  }
+  78% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 着地後のロゴのゆらぎ */
+@keyframes titleHold {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.004);
+  }
+}
+
+/* 金色の火の粉が舞い上がる */
+@keyframes emberRise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: var(--peak, 0.8);
+  }
+  100% {
+    transform: translate3d(var(--drift, 12px), -120px, 0) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* 光条（ゴッドレイ）がゆっくり揺れる */
+@keyframes raySway {
+  0% {
+    opacity: 0.6;
+    transform: rotate(var(--rot, -10deg)) translateX(-2%);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(var(--rot, -10deg)) translateX(2%);
+  }
+}
+
+/* フィルムグレインの粒立ちを小刻みにずらす */
+@keyframes grainShift {
+  0% {
+    background-position: 0 0;
+  }
+  20% {
+    background-position: -18px 9px;
+  }
+  40% {
+    background-position: 13px -14px;
+  }
+  60% {
+    background-position: -9px -9px;
+  }
+  80% {
+    background-position: 17px 6px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* シーン切り替え時の一瞬の暗転（シャッター音のようなカット感） */
+@keyframes shutterFlash {
+  0% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ケンバーンズのバリエーション。シーンごとに寄り引き・パン方向を変えてカメラの意思を出す */
+@keyframes kenburnsA {
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.15) translate(-3%, -4%) rotate(-0.6deg);
+  }
+}
+@keyframes kenburnsB {
+  0% {
+    transform: scale(1.06) translate(2%, 1%) rotate(0.5deg);
+  }
+  100% {
+    transform: scale(1.18) translate(-2%, -2%) rotate(-0.4deg);
+  }
+}
+@keyframes kenburnsC {
+  0% {
+    transform: scale(1) translate(-2%, 1%) rotate(-0.4deg);
+  }
+  100% {
+    transform: scale(1.2) translate(3%, -3%) rotate(0.6deg);
+  }
+}
+
+/* 結像する中心から放射状に伸びるレンズフレア（中心の光球） */
+@keyframes flareBurst {
+  0%,
+  57% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  66% {
+    opacity: 0.9;
+    transform: scale(1.35) rotate(8deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7) rotate(14deg);
+  }
+}
+
+/* レンズフレアの光条（回転済みの箱の中で伸縮させるだけにする） */
+@keyframes flareStreak {
+  0%,
+  57% {
+    opacity: 0;
+    transform: scaleX(0.15);
+  }
+  66% {
+    opacity: 0.9;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

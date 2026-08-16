@@ -1,0 +1,129 @@
+{
+  "select": {
+    "gain": 0.22,
+    "tones": [
+      { "wave": "square", "note": "E5", "start": 0, "dur": 0.05 },
+      { "wave": "square", "note": "B5", "start": 0.045, "dur": 0.07 }
+    ]
+  },
+  "back": {
+    "gain": 0.18,
+    "tones": [
+      { "wave": "square", "note": "B4", "start": 0, "dur": 0.05 },
+      { "wave": "square", "note": "E4", "start": 0.045, "dur": 0.08 }
+    ]
+  },
+  "start": {
+    "gain": 0.26,
+    "tones": [
+      { "wave": "square", "note": "C5", "start": 0, "dur": 0.08 },
+      { "wave": "square", "note": "E5", "start": 0.07, "dur": 0.08 },
+      { "wave": "square", "note": "G5", "start": 0.14, "dur": 0.08 },
+      { "wave": "square", "note": "C6", "start": 0.21, "dur": 0.26 },
+      { "wave": "triangle", "note": "C3", "start": 0.21, "dur": 0.3, "gain": 0.7 }
+    ]
+  },
+  "correct": {
+    "gain": 0.3,
+    "tones": [
+      { "noise": true, "start": 0, "dur": 0.12, "filter": "lowpass", "from": 6000, "to": 700, "gain": 0.55 },
+      { "wave": "square", "note": "A5", "start": 0.02, "dur": 0.06 },
+      { "wave": "square", "note": "C6", "start": 0.08, "dur": 0.06 },
+      { "wave": "square", "note": "E6", "start": 0.14, "dur": 0.22 },
+      { "wave": "triangle", "note": "A2", "start": 0, "dur": 0.16, "gain": 0.8 }
+    ]
+  },
+  "wrong": {
+    "gain": 0.24,
+    "tones": [
+      { "wave": "sawtooth", "note": "A3", "toNote": "D3", "start": 0, "dur": 0.34 },
+      { "wave": "square", "note": "A2", "toNote": "D2", "start": 0.02, "dur": 0.3, "gain": 0.7 },
+      { "noise": true, "start": 0, "dur": 0.2, "filter": "bandpass", "from": 900, "to": 260, "gain": 0.4 }
+    ]
+  },
+  "combo": {
+    "gain": 0.2,
+    "tones": [
+      { "wave": "square", "note": "E6", "start": 0, "dur": 0.05 },
+      { "wave": "square", "note": "B6", "start": 0.05, "dur": 0.12 }
+    ]
+  },
+  "levelup": {
+    "gain": 0.3,
+    "tones": [
+      { "wave": "square", "note": "C5", "start": 0, "dur": 0.09 },
+      { "wave": "square", "note": "E5", "start": 0.09, "dur": 0.09 },
+      { "wave": "square", "note": "G5", "start": 0.18, "dur": 0.09 },
+      { "wave": "square", "note": "C6", "start": 0.27, "dur": 0.09 },
+      { "wave": "square", "note": "E6", "start": 0.36, "dur": 0.4 },
+      { "wave": "triangle", "note": "C4", "start": 0.36, "dur": 0.44, "gain": 0.7 },
+      { "wave": "triangle", "note": "G4", "start": 0.36, "dur": 0.44, "gain": 0.5 }
+    ]
+  },
+  "encounter": {
+    "gain": 0.34,
+    "tones": [
+      { "noise": true, "start": 0, "dur": 0.5, "filter": "lowpass", "from": 8000, "to": 200, "gain": 0.7 },
+      { "wave": "sawtooth", "note": "A2", "toNote": "A1", "start": 0, "dur": 0.45 },
+      { "wave": "square", "note": "E3", "toNote": "E2", "start": 0.04, "dur": 0.3, "gain": 0.6 }
+    ]
+  },
+  "portal": {
+    "gain": 0.22,
+    "tones": [
+      { "wave": "sawtooth", "freq": 110, "toFreq": 880, "start": 0, "dur": 0.9 },
+      { "noise": true, "start": 0.1, "dur": 0.8, "filter": "highpass", "from": 300, "to": 5000, "gain": 0.35 }
+    ]
+  },
+  "defeat": {
+    "gain": 0.36,
+    "tones": [
+      { "noise": true, "start": 0, "dur": 0.8, "filter": "lowpass", "from": 9000, "to": 120, "gain": 0.85 },
+      { "wave": "sawtooth", "note": "D3", "toNote": "D1", "start": 0, "dur": 0.7 },
+      { "wave": "square", "note": "A4", "toNote": "A2", "start": 0, "dur": 0.5, "gain": 0.5 }
+    ]
+  },
+  "whoosh": {
+    "gain": 0.3,
+    "tones": [
+      { "noise": true, "start": 0, "dur": 2.7, "filter": "bandpass", "from": 180, "to": 2600, "gain": 0.75 },
+      { "noise": true, "start": 0.25, "dur": 2.4, "filter": "highpass", "from": 120, "to": 1900, "gain": 0.4 },
+      { "wave": "sawtooth", "freq": 48, "toFreq": 210, "start": 0.3, "dur": 2.3, "gain": 0.22 }
+    ]
+  },
+  "thunder": {
+    "gain": 0.4,
+    "tones": [
+      { "noise": true, "start": 0, "dur": 1.7, "filter": "lowpass", "from": 1100, "to": 55, "gain": 0.95 },
+      { "wave": "sawtooth", "freq": 92, "toFreq": 28, "start": 0, "dur": 1.5, "gain": 0.5 },
+      { "noise": true, "start": 0.02, "dur": 0.25, "filter": "highpass", "from": 4000, "to": 9000, "gain": 0.45 }
+    ]
+  },
+  "sparkle": {
+    "gain": 0.2,
+    "tones": [
+      { "wave": "sine", "note": "A6", "start": 0, "dur": 0.14 },
+      { "wave": "sine", "note": "E7", "start": 0.06, "dur": 0.16, "gain": 0.6 },
+      { "wave": "sine", "note": "C7", "start": 0.13, "dur": 0.18, "gain": 0.5 },
+      { "wave": "sine", "note": "G6", "start": 0.22, "dur": 0.2, "gain": 0.4 },
+      { "wave": "sine", "note": "B6", "start": 0.3, "dur": 0.2, "gain": 0.32 }
+    ]
+  },
+  "chime": {
+    "gain": 0.26,
+    "tones": [
+      { "wave": "sine", "note": "E6", "start": 0, "dur": 0.9 },
+      { "wave": "sine", "note": "B6", "start": 0.06, "dur": 1.1, "gain": 0.55 },
+      { "wave": "sine", "note": "G6", "start": 0.14, "dur": 1, "gain": 0.4 },
+      { "wave": "triangle", "note": "E5", "start": 0, "dur": 1.3, "gain": 0.5 }
+    ]
+  },
+  "unlock": {
+    "gain": 0.24,
+    "tones": [
+      { "wave": "triangle", "note": "G4", "start": 0, "dur": 0.08 },
+      { "wave": "triangle", "note": "C5", "start": 0.08, "dur": 0.08 },
+      { "wave": "triangle", "note": "E5", "start": 0.16, "dur": 0.3 }
+    ]
+  }
+}

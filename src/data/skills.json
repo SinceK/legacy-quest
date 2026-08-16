@@ -1,0 +1,6 @@
+{
+  "syntax": { "label": "構文力", "emoji": "📘" },
+  "design": { "label": "設計力", "emoji": "🧩" },
+  "process": { "label": "プロセス力", "emoji": "🗺️" },
+  "practice": { "label": "実務力", "emoji": "🛡️" }
+}

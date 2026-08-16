@@ -1,0 +1,35 @@
+{
+  "sceneDurationMs": 3400,
+  "scenes": [
+    {
+      "scene": "kingdom",
+      "tint": "radial-gradient(circle at 50% 42%, #0d3b34, #061826 72%)",
+      "moteColor": "#5eead4",
+      "caption": "西暦196X年——世界の基幹を支えた古の言語、その名は COBOL。"
+    },
+    {
+      "scene": "world",
+      "tint": "radial-gradient(circle at 50% 36%, #0e3a52, #06142a 72%)",
+      "moteColor": "#67e8f9",
+      "caption": "銀行も、行政も。その屋台骨は、COBOLの巨塔が支えていた。"
+    },
+    {
+      "scene": "cracks",
+      "tint": "radial-gradient(circle at 50% 46%, #2a1f3a, #0a0716 72%)",
+      "moteColor": "#c4b5fd",
+      "caption": "だが時は流れ、巨塔は老い、あちこちに亀裂が走りはじめた…。"
+    },
+    {
+      "scene": "crisis",
+      "tint": "radial-gradient(circle at 50% 50%, #3b0d16, #0a0409 72%)",
+      "moteColor": "#f87171",
+      "caption": "「このままでは——王国が、止まってしまう」"
+    },
+    {
+      "scene": "journey",
+      "tint": "linear-gradient(180deg, #1b1740 0%, #3a2a55 45%, #7c2d12 100%)",
+      "moteColor": "#fcd34d",
+      "caption": "選ばれし新人よ。COBOLからJavaへ。移行の旅が、いま幕を開ける。"
+    }
+  ]
+}
